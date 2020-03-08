@@ -1,10 +1,17 @@
+# -*- coding: utf-8 -*-
 import re
 
 
 def del_sqrBrackets(text):
-    # regex = re.compile('[\(\[].*?[\)\]]')
-    # regex = re.compile('[ ]?[\(].*?[\)]')
-    regex = re.compile('\s?[\[].*?[\]]')
+    """Removes the square brackets (and their content) from text.
+
+    :param str text: The text to ble cleaned of [ ].  
+    :return: Same text without square brackets.  
+    """
+
+    # regex = re.compile(r'[\(\[].*?[\)\]]')
+    # regex = re.compile(r'[ ]?[\(].*?[\)]')
+    regex = re.compile(r'\s?[\[].*?[\]]')
     result = re.sub(regex, '', text)
     return result
 

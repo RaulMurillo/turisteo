@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # https://www.geeksforgeeks.org/performing-google-search-using-python-code/
 try:
     from googlesearch import search
@@ -6,6 +7,13 @@ except ImportError:
 
 
 def google_search(query, lang='en', num_res=5):
+    """Returns the URLs that result of a Google query.
+
+    :param str query: The Google query.    
+    :param str lang: Languaje of the query.   
+    :param int num_res: Number of URLs to return.       
+    :rtype: list :return: List with URLs.
+    """
     # website
     site = f'site:{lang}.wikipedia.org'  # site:wikipedia.org
     # print(f'{site} {query}')
@@ -18,6 +26,12 @@ def google_search(query, lang='en', num_res=5):
 
 
 def google_fast_search(query, lang='en'):
+    """Returns the first URL that results of a Google query.
+
+    :param str query: The Google query.    
+    :param str lang: Languaje of the query.     
+    :rtype: str :return: URL.
+    """
     # website
     site = f'site:{lang}.wikipedia.org'  # site:wikipedia.org
     # print(f'{site} {query}')
@@ -28,7 +42,6 @@ def google_fast_search(query, lang='en'):
 
 
 if __name__ == "__main__":
-
     # to search
     query = "Alhambra"
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from requests.exceptions import HTTPError
 # import urllib.request
@@ -11,6 +12,13 @@ from clean_text import del_sqrBrackets
 
 
 def get_all_text(url):
+    """Retrieves all text in paragraphs.
+
+    :param str url: The URL to scrap.
+
+    :rtype: str :return: Text in the URL.
+    """
+
     try:
         response = requests.get(url)
 
@@ -18,12 +26,12 @@ def get_all_text(url):
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
     except Exception as err:
         print(f'Other error occurred: {err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
 
     soup = BeautifulSoup(response.text, "lxml")
 
@@ -37,6 +45,13 @@ def get_all_text(url):
 
 
 def get_text_maxChars(url, maxChars):
+    """Retrieves all text in paragraphs up to a limit of characters.
+
+    :param str url: The URL to scrap.    
+    :param str maxChars: Maximum number of characters to return.  
+    :rtype: str :return: Text in the URL.
+    """
+
     try:
         response = requests.get(url)
 
@@ -44,12 +59,12 @@ def get_text_maxChars(url, maxChars):
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
     except Exception as err:
         print(f'Other error occurred: {err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
 
     soup = BeautifulSoup(response.text, "lxml")
 
@@ -67,6 +82,11 @@ def get_text_maxChars(url, maxChars):
 
 
 def get_entry_text(url):
+    """Retrieves text in paragraphs at Wikipedia header.
+
+    :param str url: The URL to scrap.    
+    :rtype: str :return: Text in the URL.
+    """
     try:
         response = requests.get(url)
 
@@ -74,12 +94,12 @@ def get_entry_text(url):
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
     except Exception as err:
         print(f'Other error occurred: {err}')  # Python 3.6
-        # return None
-        sys.exit()
+        return None
+        # sys.exit()
 
     soup = BeautifulSoup(response.text, "lxml")
     # This will get the div
@@ -113,11 +133,11 @@ def get_entry_text(url):
 
 
 if __name__ == "__main__":
-    # URL = 'https://en.wikipedia.org/wiki/Alhambra'
+    # URL = 'https://en.wikipedia.org/wiki/Alhambra2'
 
     from google_search import google_search, google_fast_search
-    URL = google_search('Torre ifel', num_res=1, lang='es')[0]
-    # URL = google_fast_search('Torre ifel', lang='es')
+    # URL = google_search('Torre ifel', num_res=1, lang='es')[0]
+    URL = google_fast_search('Torre ifel', lang='es')
     print(f'Searching in {URL} ...')
 
     # print(get_all_text(URL))
