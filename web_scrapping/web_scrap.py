@@ -119,7 +119,7 @@ def get_entry_text(url):
     if parag is None:
         return text
     else:
-        text += del_sqrBrackets(parag.get_text()) + '\n'
+        text += del_sqrBrackets(parag.get_text()) #+ '\n'
 
     # Then search in following contiainers that are paragraphs
     for sibling in parag.next_siblings:
@@ -127,19 +127,23 @@ def get_entry_text(url):
             break
         # print('Next sibling:', sibling)
         if len(sibling) > 1:
-            text += del_sqrBrackets(sibling.get_text()) + '\n'
+            text += del_sqrBrackets(sibling.get_text()) #+ '\n'
 
     return text
 
 
 if __name__ == "__main__":
-    # URL = 'https://en.wikipedia.org/wiki/Alhambra2'
+    URL = 'https://es.wikipedia.org/wiki/Alhambra'
 
     from google_search import google_search, google_fast_search
     # URL = google_search('Torre ifel', num_res=1, lang='es')[0]
-    URL = google_fast_search('Torre ifel', lang='es')
+    # URL = google_fast_search('Torre ifel', lang='es')
     print(f'Searching in {URL} ...')
 
     # print(get_all_text(URL))
     # print(get_text_maxChars(URL, 1000))
-    print(get_entry_text(URL))
+    out_text = get_entry_text(URL)
+    print(out_text)
+
+    with open('results_es.txt', 'w') as file:
+        file.write(out_text)
