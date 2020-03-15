@@ -49,16 +49,17 @@ def detect_landmarks(path):
 
     image = vision.types.Image(content=content)
 
-    response = client.landmark_detection(image=image)
+    response = client.landmark_detection(image=image, max_results=3)
     landmarks = response.landmark_annotations
     print('Landmarks:')
 
     for landmark in landmarks:
-        print(landmark.description)
-        for location in landmark.locations:
-            lat_lng = location.lat_lng
-            print('Latitude {}'.format(lat_lng.latitude))
-            print('Longitude {}'.format(lat_lng.longitude))
+        print(landmark)
+        # print(landmark.description)
+        # for location in landmark.locations:
+        #     lat_lng = location.lat_lng
+        #     print('Latitude {}'.format(lat_lng.latitude))
+        #     print('Longitude {}'.format(lat_lng.longitude))
 
     if response.error.message:
         raise Exception(
@@ -83,7 +84,8 @@ def detect_landmarks_uri(uri):
     print('Landmarks:')
 
     for landmark in landmarks:
-        print(landmark.description)
+        # print(landmark.description)
+        print(landmark)
 
     if response.error.message:
         raise Exception(
@@ -152,8 +154,6 @@ def run_uri(args):
 
 if __name__ == '__main__':
     import os
-    # os.system('export GOOGLE_APPLICATION_CREDENTIALS="/home/ramurimontero/credentials.json"')
-    # os.system('echo $GOOGLE_APPLICATION_CREDENTIALS')
     os.environ['GOOGLE_APPLICATION_CREDENTIALS']='/home/raul/credentials.json'
     print('Google credentials in:', os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
