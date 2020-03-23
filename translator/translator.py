@@ -13,13 +13,8 @@ if not endpoint_var_name in os.environ:
 endpoint = os.environ[endpoint_var_name]
 
 
-
-with open('text.csv') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=';')
-    text=""
-    for row in csv_reader:
-        text+=row[0]
-
+f = open("text.txt", "r")
+text = f.read()
 
 
 path = '/translate?api-version=3.0'
@@ -39,8 +34,11 @@ body = [
 request = requests.post(constructed_url, headers=headers, json=body)
 response = request.json()
 
-print(json.dumps(response, sort_keys=True, indent=4, separators=(',', ': ')))
 
+out = json.dumps(response, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': '))
 
+f.close()
 
-
+w = open("out.txt", "w")
+w.write(out)
+w.close()
