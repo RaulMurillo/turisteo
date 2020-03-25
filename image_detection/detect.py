@@ -34,6 +34,8 @@ https://cloud.google.com/vision/docs.
 """
 
 import argparse
+import json
+from google.protobuf.json_format import MessageToJson
 
 
 # [START vision_landmark_detection]
@@ -55,6 +57,7 @@ def detect_landmarks(path):
 
     for landmark in landmarks:
         print(landmark)
+
         # print(landmark.description)
         # for location in landmark.locations:
         #     lat_lng = location.lat_lng
@@ -66,6 +69,14 @@ def detect_landmarks(path):
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
+
+    annotations = json.loads(MessageToJson(
+        response, preserving_proto_field_name=True))
+    # print(type(annotations))
+    # print(annotations)
+    # print(type(annotations['landmark_annotations']))
+    return annotations['landmark_annotations']
+
     # [END vision_python_migration_landmark_detection]
 # [END vision_landmark_detection]
 
@@ -93,6 +104,7 @@ def detect_landmarks_uri(uri):
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
 # [END vision_landmark_detection_gcs]
+
 
 def run_local(args):
     if args.command == 'faces':
@@ -154,8 +166,9 @@ def run_uri(args):
 
 if __name__ == '__main__':
     import os
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS']='credentials.json'
-    print('Google credentials in:', os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credentials.json'
+    print('Google credentials in:',
+          os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
     parser = argparse.ArgumentParser(
         description=__doc__,
