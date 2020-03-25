@@ -81,7 +81,7 @@ def translate(text_input, lang='es', orig=None):
     for i, text in enumerate(texts):
 
         body = [
-            {"text": text}  # max size = 2500
+            {"text": text}  # max size
         ]
 
         request = requests.post(constructed_url, headers=headers, json=body)
