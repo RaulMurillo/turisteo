@@ -58,7 +58,6 @@ def translate(text_input, lang='es', orig=None):
 
     if len(text_input) > MAX_LENGTH:
         texts = text_input.splitlines(True)
-        if any()
         for i, t in enumerate(texts):
             if len(t) > MAX_LENGTH:
                 paragraph = t.split('.')
