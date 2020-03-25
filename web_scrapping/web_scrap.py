@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 import pandas as pd
 import logging
-from clean_text import del_sqrBrackets
+from clean_text import *
 
 
 def get_all_text(url):
@@ -39,7 +39,7 @@ def get_all_text(url):
     for i in soup.find_all('p'):  # soup.select
         # i.encode("utf-8") # default
         # Delete citations (e.g. "The Alhambra is a UNESCO World Heritage Site.[2]")
-        text += del_sqrBrackets(i.get_text()) + '\n'
+        text += del_refs(i.get_text()) + '\n'
 
     return text
 
@@ -74,7 +74,7 @@ def get_text_maxChars(url, maxChars):
         l_paragraph = len(i.text)
         if l_text + l_paragraph > maxChars:
             break
-        text += del_sqrBrackets(i.get_text()) + '\n'
+        text += del_refs(i.get_text()) + '\n'
         l_text += l_paragraph + 1
 
     print(l_text)
@@ -119,7 +119,7 @@ def get_entry_text(url):
     if parag is None:
         return text
     else:
-        text += del_sqrBrackets(parag.get_text()) #+ '\n'
+        text += parag.get_text()  # + '\n'
 
     # Then search in following contiainers that are paragraphs
     for sibling in parag.next_siblings:
@@ -127,23 +127,25 @@ def get_entry_text(url):
             break
         # print('Next sibling:', sibling)
         if len(sibling) > 1:
-            text += del_sqrBrackets(sibling.get_text()) #+ '\n'
+            text += sibling.get_text()  # + '\n'
 
+    text = del_nonAscii(del_refs(text))
     return text
 
 
 if __name__ == "__main__":
-    URL = 'https://es.wikipedia.org/wiki/Alhambra'
+    URL = 'https://en.wikipedia.org/wiki/Alhambra'
 
-    from google_search import google_search, google_fast_search
+    # from google_search import google_search, google_fast_search
     # URL = google_search('Torre ifel', num_res=1, lang='es')[0]
     # URL = google_fast_search('Torre ifel', lang='es')
-    print(f'Searching in {URL} ...')
 
+    print(f'Searching in {URL} ...')
     # print(get_all_text(URL))
     # print(get_text_maxChars(URL, 1000))
     out_text = get_entry_text(URL)
+
     print(out_text)
 
-    with open('results_es.txt', 'w') as file:
-        file.write(out_text)
+    # with open('results_es.txt', 'w') as file:
+    #     file.write(out_text)
