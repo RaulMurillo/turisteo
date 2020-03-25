@@ -58,7 +58,6 @@ def translate(text_input, lang='es', orig=None):
 
     if len(text_input) > MAX_LENGTH:
         texts = text_input.splitlines(True)
-        if any()
         for i, t in enumerate(texts):
             if len(t) > MAX_LENGTH:
                 paragraph = t.split('.')
@@ -82,7 +81,7 @@ def translate(text_input, lang='es', orig=None):
     for i, text in enumerate(texts):
 
         body = [
-            {"text": text}  # max size = 2500
+            {"text": text}  # max size
         ]
 
         request = requests.post(constructed_url, headers=headers, json=body)
