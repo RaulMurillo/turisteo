@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# import urllib
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 import requests
 from requests.exceptions import HTTPError
 from bs4 import BeautifulSoup

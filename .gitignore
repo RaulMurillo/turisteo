@@ -9,10 +9,6 @@ __pycache__/
 .vscode/
 *.json
 
-# Visual code files
-.vscode/
-*.json
-
 # C extensions
 *.so
 
@@ -139,4 +135,4 @@ dmypy.json
 .pyre/
 
 # Credentials
-credentials.json
+credentials.*

@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 import requests
 from requests.exceptions import HTTPError
-# import urllib.request
 import time
 import sys
 from bs4 import BeautifulSoup
-import numpy as np
-import pandas as pd
 import logging
 from clean_text import *
 

@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 # https://www.geeksforgeeks.org/performing-google-search-using-python-code/
 try:
     from googlesearch import search

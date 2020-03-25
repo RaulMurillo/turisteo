@@ -1,9 +1,11 @@
-# import cv2
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 from PIL import Image, ImageDraw, ImageFont
+
 
 def plot_rectangle(path, p0, p1):
     """Plots rectangle in image."""
-    
+
     # get the image
     im = Image.open(path).convert('RGB')
     # print(im.size)
@@ -22,10 +24,11 @@ def plot_rectangle(path, p0, p1):
 
     name += '_square.' + n[-1]
     # print(name)
-    im.save(name) 
+    im.save(name)
+
 
 if __name__ == '__main__':
 
-    plot_rectangle('./geeks.png', (40, 40), (110, 110))
-    plot_rectangle('./a.jpg', (565, 1018), (1488, 1555))
-    plot_rectangle('./landmark.jpg', (192, 203), (975, 425))
+    plot_rectangle('./resources/img1.jpg', (565, 1018), (1488, 1555))
+    plot_rectangle('./resources/img2.jpg', (1760, 1329), (1941, 2008))
+    plot_rectangle('./resources/img3.jpg', (192, 203), (975, 425))

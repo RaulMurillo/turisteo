@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2017 Google Inc. All Rights Reserved.
 #
@@ -165,10 +166,6 @@ def run_uri(args):
 
 
 if __name__ == '__main__':
-    import os
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credentials.json'
-    print('Google credentials in:',
-          os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
     parser = argparse.ArgumentParser(
         description=__doc__,
