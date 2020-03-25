@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Visual code files
+.vscode/
 *.json
 
 # C extensions
@@ -129,3 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Credentials
+credentials.json
