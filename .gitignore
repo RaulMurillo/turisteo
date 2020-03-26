@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
 
 # Visual code files
 .vscode/
@@ -133,4 +135,4 @@ dmypy.json
 .pyre/
 
 # Credentials
-credentials.json
+credentials.*
