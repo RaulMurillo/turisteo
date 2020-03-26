@@ -92,7 +92,7 @@ def translate(text_input, lang='es', orig=None):
 
     # out_json = json.dumps(response[0], ensure_ascii=False,
     #                  sort_keys=True, indent=4, separators=(',', ': '))
-    # with open("out.txt", "w") as f:
+    # with open("src/out.txt", "w") as f:
     #     f.write(out_json)
 
     return response[0]
@@ -100,9 +100,9 @@ def translate(text_input, lang='es', orig=None):
 
 if __name__ == '__main__':
     # Example
-    with open("text.txt", "r") as f:
+    with open("src/text.txt", "r") as f:
         r = f.read()
 
     translate(r)
-    translate(r, lang='pt', orig='en')
+    # translate(r, lang='pt', orig='en')
     #output: out.txt
