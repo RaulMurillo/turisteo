@@ -37,8 +37,9 @@ def get_all_text(url):
     for i in soup.find_all('p'):  # soup.select
         # i.encode("utf-8") # default
         # Delete citations (e.g. "The Alhambra is a UNESCO World Heritage Site.[2]")
-        text += del_refs(i.get_text()) + '\n'
+        text += i.get_text() + '\n'
 
+    text = del_nonAscii(del_refs(text))
     return text
 
 
@@ -49,7 +50,6 @@ def get_text_maxChars(url, maxChars):
     :param str maxChars: Maximum number of characters to return.  
     :rtype: str :return: Text in the URL.
     """
-
     try:
         response = requests.get(url)
 
@@ -72,10 +72,11 @@ def get_text_maxChars(url, maxChars):
         l_paragraph = len(i.text)
         if l_text + l_paragraph > maxChars:
             break
-        text += del_refs(i.get_text()) + '\n'
+        text += i.get_text() + '\n'
         l_text += l_paragraph + 1
 
-    print(l_text)
+    logging.debug(l_text)
+    text = del_nonAscii(del_refs(text))
     return text
 
 
