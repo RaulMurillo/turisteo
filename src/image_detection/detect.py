@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2017 Google Inc. All Rights Reserved.
 #
@@ -36,11 +37,19 @@ https://cloud.google.com/vision/docs.
 import argparse
 import json
 from google.protobuf.json_format import MessageToJson
+import logging
 
 
 # [START vision_landmark_detection]
 def detect_landmarks(path):
-    """Detects landmarks in the file."""
+    """Detects landmarks in the file.
+
+    Args:
+        path (str): Path of the original image.
+
+    Returns:
+        dict: The possible detected landmarks on the image.
+    """ 
     from google.cloud import vision
     import io
     client = vision.ImageAnnotatorClient()
@@ -53,10 +62,10 @@ def detect_landmarks(path):
 
     response = client.landmark_detection(image=image, max_results=3)
     landmarks = response.landmark_annotations
-    print('Landmarks:')
+    logging.debug('Landmarks:')
 
     for landmark in landmarks:
-        print(landmark)
+        logging.debug(landmark)
 
         # print(landmark.description)
         # for location in landmark.locations:
@@ -92,11 +101,11 @@ def detect_landmarks_uri(uri):
 
     response = client.landmark_detection(image=image)
     landmarks = response.landmark_annotations
-    print('Landmarks:')
+    logging.debug('Landmarks:')
 
     for landmark in landmarks:
-        # print(landmark.description)
-        print(landmark)
+        # logging.debug(landmark.description)
+        logging.debug(landmark)
 
     if response.error.message:
         raise Exception(
