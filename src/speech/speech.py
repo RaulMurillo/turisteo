@@ -5,10 +5,11 @@ import os
 import requests
 import time
 from xml.etree import ElementTree
-import inflect
+# import inflect
 import re
 import string
 import json
+import logging
 
 
 try:
@@ -19,7 +20,7 @@ except NameError:
 
 class TextToSpeech(object):
 
-    def __init__(self, subscription_key, file, lang):
+    def __init__(self, subscription_key, text, lang):
         languages = {
             'de': ['de-DE', 'KatjaNeural'],
             'en': ['en-US', 'JessaNeural'],
@@ -28,8 +29,8 @@ class TextToSpeech(object):
             'it': ['it-IT', 'ElsaNeural']
         }
         self.subscription_key = subscription_key
-        self.tts = file
-        self.timestr = time.strftime("%Y%m%d-%H%M")
+        self.tts = text
+        self.timestr = time.strftime(f"%Y%m%d-%H%M%S")
         self.access_token = None
         self.language = languages[lang][0]
         self.name = languages[lang][1]
@@ -46,7 +47,7 @@ class TextToSpeech(object):
         response = requests.post(fetch_token_url, headers=headers)
         self.access_token = str(response.text)
 
-    def save_audio(self):
+    def save_audio(self, file_path='./'):
         base_url = 'https://eastus.tts.speech.microsoft.com/'
         path = 'cognitiveservices/v1'
         constructed_url = base_url + path
@@ -68,33 +69,49 @@ class TextToSpeech(object):
 
         response = requests.post(constructed_url, headers=headers, data=body)
         if response.status_code == 200:
-            with open('sample-' + self.timestr + '.wav', 'wb') as audio:
+            audio_path = file_path + 'sample-' + self.timestr + '.wav'
+            with open(audio_path, 'wb') as audio:
                 audio.write(response.content)
-                print("\nStatus code: " + str(response.status_code) +
-                      "\nYour TTS is ready for playback.\n")
+                logging.info(
+                    f"\nStatus code: {response.status_code} \nYour TTS is ready for playback.\n")
+            return audio_path
 
         else:
-            print("\nStatus code: " + str(response.status_code) +
-                  "\nSomething went wrong. Check your subscription key and headers.\n")
+            logging.error(f"\nStatus code: {response.status_code} \nSomething went wrong. Check your subscription key and headers.\n")
 
 
 if __name__ == "__main__":
-    with open('text_numbers_letters.txt', 'r', encoding="utf-8") as f:
+
+    logging.basicConfig()
+    logging.root.setLevel(logging.INFO)
+    logging.basicConfig(level=logging.INFO)
+    
+    with open('src/out.txt', 'r', encoding="utf-8") as f:
         in_file = f.read()
-    file_split = in_file.split()
-    if file_split[0] == '[':
-        data_string = json.loads(in_file)
-        in_file = data_string[0]['translations'][0]['text']
-        language = data_string[0]['translations'][0]['to']
-    else:
-        language = 'en'
+
+    d = json.loads(in_file)
+    logging.info(type(d))
+
+    text = d['translations'][0]['text']
+    language = d['translations'][0]['to']
+    logging.info(language)
+
+    # file_split = in_file.split()
+    # if file_split[0] == '[':
+    #     data_string = json.loads(in_file)
+    #     in_file = data_string[0]['translations'][0]['text']
+    #     language = data_string[0]['translations'][0]['to']
+    # else:
+    #     language = 'en'
+
     key_name = 'SPEECH_SUBCRIPTION_KEY'
     if not key_name in os.environ:
         raise Exception(
             'Please set/expot the enviroment variable: {}' .format(key_name))
     subscription_key = os.environ[key_name]
-    app = TextToSpeech(subscription_key, in_file, language)
+    app = TextToSpeech(subscription_key, text, language)
     app.get_token()
-    app.save_audio()
+    audio = app.save_audio()
     time = app.timestr
-    playsound('sample-' + time + '.wav')
+    # exit(1)
+    playsound(audio)
