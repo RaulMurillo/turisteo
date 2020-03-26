@@ -174,13 +174,10 @@ def run_uri(args):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD:src/image_detection/detect.py
-=======
     import os
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'src/image_detection/credentials.json'
     print('Google credentials in:',
           os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
->>>>>>> image_detection:src/image_detection/detect.py
 
     parser = argparse.ArgumentParser(
         description=__doc__,

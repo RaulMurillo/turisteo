@@ -30,17 +30,28 @@ class Turisteo:
     def set_img(self, path):
         """Set the image to analize.
 
-        path (str): Path to the image.
+        Args:
+            path (str): Path of the image.  
         """
         # TODO: Check if is a valid path
         self.img = path
 
     def get_info(self, draw_rectangle=False):
+        """Get information from the image.
+
+        Args:
+            draw_rectangle (bool): If `True`, generates a rectangle around the monument in the image. Default is `False`.
+
+        Returns:
+            dict: Requested information. At least, `text` key is present. Optional `image` and `audio` keys indicate corresponding paths to image with rectangle and text-audio conversion, respectively.
+        """
         landmarks = detect_landmarks(self.img)
         logging.info(landmarks)
 
         q = landmarks[0]['description']
         url = google_fast_search(query=q)
+
+        response = {'text': ''}
 
         if draw_rectangle:
             logging.info(landmarks[0]['bounding_poly']['vertices'])
@@ -48,7 +59,8 @@ class Turisteo:
 
             p0 = (p0['x'], p0['y'])
             p1 = (p1['x'], p1['y'])
-            plot_rectangle(self.img, p0, p1)
+            rect = plot_rectangle(self.img, p0, p1)
+            response['image'] = rect
 
         logging.info(url)
         info_text = get_entry_text(url)
@@ -58,22 +70,23 @@ class Turisteo:
 
         if self.lang != 'en':
             trans_text = translate(info_text, lang=self.lang, orig='en')
-            logging.info(trans_text)
+            logging.debug(trans_text)
+            assert self.lang == trans_text["translations"][0]['to']
+            response['text'] = trans_text["translations"][0]['text']
         else:
-            trans_text = {"translations": [
-                {
-                    "text": info_text,
-                    "to": "en"
-                }
-            ]
-            }
-        # TODO: Show text
+            # trans_text = {"translations": [{"text": info_text, "to": "en"}]}
+            response['text'] = info_text
+
+        logging.info(response['text'])
 
         if self.speech:
-            assert self.lang == trans_text["translations"][0]['to']
-            speechAPI = TextToSpeech(self.speech_key, trans_text["translations"][0]['text'], self.lang)
+            speechAPI = TextToSpeech(
+                self.speech_key, response['text'], self.lang)
             speechAPI.get_token()
             audio = speechAPI.save_audio(file_path='src/resources/audios/')
+            response['audio'] = audio
+
+        return response
 
 
 if __name__ == "__main__":
@@ -87,4 +100,4 @@ if __name__ == "__main__":
     app = Turisteo(trans_key, speech_key, speech=True)
     app.set_lang('es')
     app.set_img('src/resources/images/test.jpg')
-    app.get_info(draw_rectangle=True)
+    print(app.get_info(draw_rectangle=True))
