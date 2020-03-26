@@ -5,15 +5,18 @@ from image_detection.plot_rectangle import plot_rectangle
 from web_scrapping.google_search import (google_search, google_fast_search)
 from web_scrapping.web_scrap import (get_entry_text, get_text_maxChars)
 from translator.translator import translate
+from speech.speech import TextToSpeech
 
 import logging
 
 
 class Turisteo:
-    def __init__(self, lang='en'):
+    def __init__(self, translator_key, speech_key, lang='en', speech=False):
+        self.translator_key = translator_key
+        self.speech_key = speech_key
         self.lang = lang
         self.img = None
-        self.speech = False
+        self.speech = speech
 
     def set_lang(self, lang):
         """Set the language of the application.
@@ -42,7 +45,7 @@ class Turisteo:
         if draw_rectangle:
             logging.info(landmarks[0]['bounding_poly']['vertices'])
             p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
-            
+
             p0 = (p0['x'], p0['y'])
             p1 = (p1['x'], p1['y'])
             plot_rectangle(self.img, p0, p1)
@@ -56,22 +59,32 @@ class Turisteo:
         if self.lang != 'en':
             trans_text = translate(info_text, lang=self.lang, orig='en')
             logging.info(trans_text)
+        else:
+            trans_text = {"translations": [
+                {
+                    "text": info_text,
+                    "to": "en"
+                }
+            ]
+            }
+        # TODO: Show text
 
-
-
-
+        if self.speech:
+            assert self.lang == trans_text["translations"][0]['to']
+            speechAPI = TextToSpeech(self.speech_key, trans_text["translations"][0]['text'], self.lang)
+            speechAPI.get_token()
+            audio = speechAPI.save_audio(file_path='src/resources/audios/')
 
 
 if __name__ == "__main__":
     from credentials import export_credentials
-    export_credentials()
+    trans_key, speech_key = export_credentials()
 
     logging.basicConfig()
     logging.root.setLevel(logging.INFO)
     logging.basicConfig(level=logging.INFO)
-        
 
-    app = Turisteo()
+    app = Turisteo(trans_key, speech_key, speech=True)
     app.set_lang('es')
-    app.set_img('src/image_detection/resources/img2.jpg')
+    app.set_img('src/resources/images/test.jpg')
     app.get_info(draw_rectangle=True)
