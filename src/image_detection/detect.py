@@ -166,7 +166,7 @@ def run_uri(args):
 
 if __name__ == '__main__':
     import os
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credentials.json'
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'src/image_detection/credentials.json'
     print('Google credentials in:',
           os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
