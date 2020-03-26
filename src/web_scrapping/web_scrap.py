@@ -6,7 +6,7 @@ import time
 import sys
 from bs4 import BeautifulSoup
 import logging
-from clean_text import *
+from web_scrapping.clean_text import *
 
 
 def get_all_text(url):
@@ -76,7 +76,7 @@ def get_text_maxChars(url, maxChars):
         l_text += l_paragraph + 1
 
     logging.debug(l_text)
-    text = del_nonAscii(del_refs(text))
+    text = del_nonAscii(del_coordinates(del_refs(text)))
     return text
 
 
@@ -128,7 +128,7 @@ def get_entry_text(url):
         if len(sibling) > 1:
             text += sibling.get_text()  # + '\n'
 
-    text = del_nonAscii(del_refs(text))
+    text = del_nonAscii(del_coordinates(del_refs(text)))
     return text
 
 

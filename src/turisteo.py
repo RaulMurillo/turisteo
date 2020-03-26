@@ -73,5 +73,5 @@ if __name__ == "__main__":
 
     app = Turisteo()
     app.set_lang('es')
-    app.set_img('image_detection/resources/img1.jpg')
+    app.set_img('src/image_detection/resources/img2.jpg')
     app.get_info(draw_rectangle=True)

@@ -99,6 +99,11 @@ def del_nonAscii(text):
                 text = s0 + s2
     return text
 
+def del_coordinates(text):
+    regex = re.compile(r'Coordinates:\s?[^\n]*\n')
+    result = re.sub(regex, '', text)
+    return result
+
 
 if __name__ == "__main__":
     x = "The Taj Mahal (/ˌtɑːdʒ məˈhɑːl, ˌtɑːʒ-/;[4] lit. Crown of the Palace, [taːdʒ ˈmɛːɦ(ə)l])[5] is an ivory-white marble mausoleum on the south bank of the Yamuna river in the Indian city of Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan (reigned from 1628 to 1658) to house the tomb of his favourite wife, Mumtaz Mahal; it also houses the tomb of Shah Jahan himself. The tomb is the centrepiece of a 17-hectare (42-acre) complex, which includes a mosque and a guest house, and is set in formal gardens bounded on three sides by a crenellated wall."
