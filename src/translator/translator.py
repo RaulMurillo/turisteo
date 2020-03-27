@@ -15,7 +15,13 @@ class TranslatorText:
         self._origin = orig
         self._MAX_LENGTH = 2500
 
-    def set_lang(self, lang, orig):
+    def set_lang(self, lang, orig=None):
+        """Set the language of the application.
+
+        lang (str): Must be a valid language code.
+        orig (str): Language code to translate the text from.
+        Valid languages are in https://docs.microsoft.com/en-us/azure/cognitive-services/translator/language-support
+        """
         self._language = lang
         self._origin = orig
 
@@ -77,7 +83,7 @@ if __name__ == '__main__':
             'Please set/expot the enviroment variable: {}' .format(key_name))
     subscription_key = os.environ[key_name]
 
-    app = TranslatorText(subscription_key, lang='es', text)
+    app = TranslatorText(subscription_key, lang='es', text=text)
     traduction = app.translate()
     print(traduction)
     print()

@@ -17,18 +17,18 @@ try:
 except NameError:
     pass
 
+languages = {
+    'de': ['de-DE', 'KatjaNeural'],
+    'en': ['en-US', 'AriaNeural'],
+    'es': ['es-ES', 'HelenaRUS'],
+    'fr': ['fr-FR', 'HortenseRUS'],
+    'it': ['it-IT', 'ElsaNeural'],
+    'pt': ['pt-BR', 'FranciscaNeural']
+}
 
 class TextToSpeech(object):
 
-    def __init__(self, subscription_key, text, lang):
-        languages = {
-            'de': ['de-DE', 'KatjaNeural'],
-            'en': ['en-US', 'AriaNeural'],
-            'es': ['es-ES', 'HelenaRUS'],
-            'fr': ['fr-FR', 'HortenseRUS'],
-            'it': ['it-IT', 'ElsaNeural'],
-            'pt': ['pt-BR', 'FranciscaNeural']
-        }
+    def __init__(self, subscription_key, lang, text=None):
         self.subscription_key = subscription_key
         self.tts = text
         self.timestr = time.strftime(f"%Y%m%d-%H%M%S")
@@ -42,8 +42,14 @@ class TextToSpeech(object):
         lang (str): Must be a valid language code.
         Valid languages are in https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support
         """
+        if not lang in languages:
+            raise ValueError(
+                'Code {} is not a valid language code for speech, please select a valid language code.'.format(lang))
         self.language = languages[lang][0]
         self.name = languages[lang][1]
+
+    def set_text(self, text):
+        self.tts = text
 
     def get_token(self):
         endpoint_var = 'SPEECH_ENDPOINT'
@@ -87,7 +93,8 @@ class TextToSpeech(object):
             return audio_path
 
         else:
-            logging.error(f"\nStatus code: {response.status_code} \nSomething went wrong. Check your subscription key and headers.\n")
+            logging.error(
+                f"\nStatus code: {response.status_code} \nSomething went wrong. Check your subscription key and headers.\n")
 
 
 if __name__ == "__main__":
@@ -95,7 +102,7 @@ if __name__ == "__main__":
     logging.basicConfig()
     logging.root.setLevel(logging.INFO)
     logging.basicConfig(level=logging.INFO)
-    
+
     with open('src/out.txt', 'r', encoding="utf-8") as f:
         in_file = f.read()
 
