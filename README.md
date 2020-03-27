@@ -6,7 +6,7 @@ It consists of an App capable of recognizing artistic and cultural monuments and
 
 ### Dependencies installation
 
-The following packages and libraries must be installed: Python 3, Google and [Google Cloud Vision API](https://cloud.google.com/vision/docs), [Pillow](https://pillow.readthedocs.io/en/stable/), [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) (and also parsers like [lxml](https://lxml.de/) and/or [html5lib](https://github.com/html5lib/) are recommended), 
+The following packages and libraries must be installed: Python 3, Google and [Google Cloud Vision API](https://cloud.google.com/vision/docs), [Pillow](https://pillow.readthedocs.io/en/stable/), [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) (and also parsers like [lxml](https://lxml.de/) and/or [html5lib](https://github.com/html5lib/) are recommended), playsound and num2words.
 
 Those packages can be installed, for example using `pip`, as following:
 
@@ -18,6 +18,8 @@ pip install pillow
 pip install beautifulsoup4   
 pip install lxml   
 pip install html5lib
+pip install playsound
+pip install num2words
 ```
 
 
