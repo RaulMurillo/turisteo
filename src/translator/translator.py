@@ -8,7 +8,7 @@ import json
 
 
 class TranslatorText:
-    def __init__(self, subscription_key, text, lang, orig=None):
+    def __init__(self, subscription_key, lang, text=None, orig=None):
         self._subscription_key = subscription_key
         self._ttt = text     # Text to translate
         self._language = lang
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             'Please set/expot the enviroment variable: {}' .format(key_name))
     subscription_key = os.environ[key_name]
 
-    app = TranslatorText(subscription_key, text, lang='es')
+    app = TranslatorText(subscription_key, lang='es', text)
     traduction = app.translate()
     print(traduction)
     print()
