@@ -23,15 +23,25 @@ class TextToSpeech(object):
     def __init__(self, subscription_key, text, lang):
         languages = {
             'de': ['de-DE', 'KatjaNeural'],
-            'en': ['en-US', 'JessaNeural'],
+            'en': ['en-US', 'AriaNeural'],
             'es': ['es-ES', 'HelenaRUS'],
             'fr': ['fr-FR', 'HortenseRUS'],
-            'it': ['it-IT', 'ElsaNeural']
+            'it': ['it-IT', 'ElsaNeural'],
+            'pt': ['pt-BR', 'FranciscaNeural']
         }
         self.subscription_key = subscription_key
         self.tts = text
         self.timestr = time.strftime(f"%Y%m%d-%H%M%S")
         self.access_token = None
+        self.language = languages[lang][0]
+        self.name = languages[lang][1]
+
+    def set_lang(self, lang):
+        """Set the language of the application.
+
+        lang (str): Must be a valid language code.
+        Valid languages are in https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support
+        """
         self.language = languages[lang][0]
         self.name = languages[lang][1]
 
