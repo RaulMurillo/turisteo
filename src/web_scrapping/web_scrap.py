@@ -6,7 +6,7 @@ import time
 import sys
 from bs4 import BeautifulSoup
 import logging
-from web_scrapping.clean_text import *
+from utils.clean_text import *
 
 
 def get_all_text(url):

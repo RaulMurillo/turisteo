@@ -48,7 +48,7 @@ class Turisteo:
         """Set the image to analize.
 
         Args:
-            path (str): Path of the image.  
+            path (str): Path of the image.
         """
         # TODO: Check if is a valid path
         self.img = path
@@ -116,12 +116,13 @@ class Turisteo:
 
 
 if __name__ == "__main__":
-    from credentials import export_credentials
-    trans_key, speech_key = export_credentials()
+    from utils.credentials import export_credentials
 
     logging.basicConfig()
     logging.root.setLevel(logging.INFO)
     logging.basicConfig(level=logging.INFO)
+
+    trans_key, speech_key = export_credentials()
 
     app = Turisteo(speech=True)
     app.init_translate(trans_key)
