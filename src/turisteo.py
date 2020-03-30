@@ -127,6 +127,6 @@ if __name__ == "__main__":
     app = Turisteo(speech=True)
     app.init_translate(trans_key)
     app.init_speech(speech_key)
-    app.set_lang('pt')
-    app.set_img('src/resources/images/test.jpg')
+    app.set_lang('es')
+    app.set_img('src/resources/images/img3.jpg')
     print(app.get_info(draw_rectangle=True))

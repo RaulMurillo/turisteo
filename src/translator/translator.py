@@ -48,7 +48,7 @@ class TranslatorText:
         endpoint = os.environ[endpoint_var]
 
         if len(self._ttt) > self._MAX_LENGTH:
-            trad_in = self._split()
+            trad_in = self.split()
         else:
             trad_in = [self._ttt]
 
