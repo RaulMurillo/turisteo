@@ -1,5 +1,5 @@
 <!-- # Turisteo -->
-![turisteo logo](img/full_turisteo.svg)   
+![turisteo logo](img/full_turisteo.png)   
 ===
 Turisteo is a proyect for the subject "Tecnologías Multimedia e Interacción" (TMI) from Master in Computer Engineering at Complutense University of Madrid, course 2019-2020.
 
