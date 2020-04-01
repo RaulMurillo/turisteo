@@ -7,7 +7,6 @@ __pycache__/
 
 # Visual code files
 .vscode/
-*.json
 
 # C extensions
 *.so
