@@ -38,6 +38,8 @@ class App extends React.Component {
 				<Row>
 					<ImageUploader
 						withIcon={true}
+						singleImage={true}
+						withPreview={true}
 						buttonText='Upload image'
 						onChange={this.onDrop}
 						imgExtension={['.jpg', '.gif', '.png', '.gif']}
