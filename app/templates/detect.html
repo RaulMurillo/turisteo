@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<table class="table table-hover">
+    <tr>
+        <td>
+            <h1>{{ landmark }}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td><img src="{{url_for('static', filename=image_path)}}" alt="Uploaded landmark image" style="width:500px;">
+        </td>
+    </tr>
+</table>
+{% endblock %}
