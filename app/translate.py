@@ -2,6 +2,7 @@ import json
 import requests
 from app import app
 import uuid
+import logging
 
 # __subscription_key__ = None
 # __endpoint__ = 'https://api.cognitive.microsofttranslator.com'
@@ -63,7 +64,7 @@ def translate(text, source_language, dest_language):
         return 'Error: the translation service is not configured.'
 
     if len(text) > MAX_LENGTH:
-        trad_in = split()
+        trad_in = split(text)
     else:
         trad_in = [text]
     
@@ -82,5 +83,5 @@ def translate(text, source_language, dest_language):
     #     return 'Error: the translation service failed.'
     for r in response[1:]:
         response[0]['translations'][0]['text'] += r['translations'][0]['text']
-    print (response)
+    logging.info(response)
     return response

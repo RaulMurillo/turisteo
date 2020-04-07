@@ -9,6 +9,7 @@ from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 # from flask_moment import Moment
 from config import Config
+import shutil
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -19,6 +20,12 @@ app.config.from_object(Config)
 mail = Mail(app)
 bootstrap = Bootstrap(app)
 # moment = Moment(app)
+
+# Delete previous files
+shutil.rmtree(app.instance_path, ignore_errors=True)
+# create the folders for runtime files when setting up your app
+os.makedirs(os.path.join(app.instance_path, 'images'), exist_ok=True)
+os.makedirs(os.path.join(app.instance_path, 'audios'), exist_ok=True)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:

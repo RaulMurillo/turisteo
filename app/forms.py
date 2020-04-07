@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
-    TextAreaField
+    TextAreaField, FileField, RadioField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, \
-    Length
-# from app.models import User
+    Length, regexp
+from app import app
+import re
 
 
 class LoginForm(FlaskForm):
@@ -63,3 +64,28 @@ class EditProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     post = TextAreaField('Say something', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class ImageForm(FlaskForm):
+    # post = TextAreaField('Say something', validators=[DataRequired()])
+    # image = FileField('Image File', validators=[regexp(r'^[^/\\]\.jpg$')])
+    image = FileField('Image File', validators=[DataRequired()])
+    language = SelectField('Language', choices=[
+        ('en', '\U0001F1FA\U0001F1F8 English (US)'),
+        ('es', '\U0001F1EA\U0001F1F8 Spanish'),
+        ('fr', '\U0001F1EB\U0001F1F7 French'),
+        ('de', '\U0001F1E9\U0001F1EA German'),
+        ('it', '\U0001F1EE\U0001F1F9 Italian'),
+        ('pt', '\U0001F1E7\U0001F1F7 Portuguese (Brazil audio)'),
+        ('zh-Hans', '\U0001F1E8\U0001F1F3 Chinese (Simplified)')
+    ], validators=[DataRequired()])
+    sound = BooleanField('Sound')
+    submit = SubmitField('Submit')
+
+    def validate_image(self, image):
+        filename = image.data.filename
+        if filename.rsplit('.', 1)[1].lower() not in app.config['ALLOWED_EXTENSIONS']:
+            raise ValidationError(
+                'Unsupported file extension. Please use a different file.')
+
+        image.data.filename = re.sub(r'[^a-z0-9_.-]', '_', filename)

@@ -43,6 +43,7 @@ import io
 
 gcp_client = None
 
+
 def init_gcp_image_api():
     global gcp_client
     gcp_client = vision.ImageAnnotatorClient()
@@ -58,7 +59,7 @@ def detect_landmarks(path):
     Returns:
         dict: The possible detected landmarks on the image.
     """
-
+    print('[detect_landmarks]')
     # gcp_client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_landmark_detection]
@@ -69,10 +70,18 @@ def detect_landmarks(path):
 
     response = gcp_client.landmark_detection(image=image, max_results=3)
     landmarks = response.landmark_annotations
-    logging.debug('Landmarks:')
 
-    for landmark in landmarks:
-        logging.debug(landmark)
+    if len(landmarks) == 0:
+        logging.warning('No landmark detected on picture.')
+        # return None
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
+
+    # logging.debug('Landmarks:')
+    # for landmark in landmarks:
+    #     logging.debug(landmark)
 
         # print(landmark.description)
         # for location in landmark.locations:
@@ -89,7 +98,7 @@ def detect_landmarks(path):
     annotations = json.loads(MessageToJson(
         response, preserving_proto_field_name=True))
     # print(type(annotations))
-    # print(annotations)
+    # print(response)
     # print(type(annotations['landmark_annotations']))
     return annotations['landmark_annotations']
 
