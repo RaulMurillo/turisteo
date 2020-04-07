@@ -14,9 +14,11 @@ class ImageDetectionError(APIError):
         message -- explanation of the error
     """
 
-    def __init__(self, expression, message):
-        self.expression = expression
-        self.message = message
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -36,4 +38,9 @@ def internal_error(error):
 
 @app.errorhandler(ImageDetectionError)
 def custom_error(error):
-    return render_template('exception.html')
+    return render_template('image_error.html')
+
+
+@app.errorhandler(Exception)
+def unknown_error(error):
+    return render_template('unknown_error.html')

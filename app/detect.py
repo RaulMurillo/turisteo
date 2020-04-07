@@ -40,13 +40,14 @@ from google.protobuf.json_format import MessageToJson
 import logging
 from google.cloud import vision
 import io
+from app.errors import ImageDetectionError
 
-gcp_client = None
+# gcp_client = None
 
 
-def init_gcp_image_api():
-    global gcp_client
-    gcp_client = vision.ImageAnnotatorClient()
+# def init_gcp_image_api():
+#     global gcp_client
+#     gcp_client = vision.ImageAnnotatorClient()
 
 
 # [START vision_landmark_detection]
@@ -60,7 +61,7 @@ def detect_landmarks(path):
         dict: The possible detected landmarks on the image.
     """
     print('[detect_landmarks]')
-    # gcp_client = vision.ImageAnnotatorClient()
+    gcp_client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_landmark_detection]
     with io.open(path, 'rb') as image_file:
@@ -74,10 +75,7 @@ def detect_landmarks(path):
     if len(landmarks) == 0:
         logging.warning('No landmark detected on picture.')
         # return None
-        raise Exception(
-            '{}\nFor more info on error messages, check: '
-            'https://cloud.google.com/apis/design/errors'.format(
-                response.error.message))
+        raise ImageDetectionError
 
     # logging.debug('Landmarks:')
     # for landmark in landmarks:
