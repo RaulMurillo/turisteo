@@ -82,7 +82,8 @@ class ImageForm(FlaskForm):
 
     def validate_image(self, image):
         filename = image.data.filename
-        if filename.rsplit('.', 1)[1].lower() not in app.config['ALLOWED_EXTENSIONS']:
+        fn_list = filename.rsplit('.', 1)
+        if len(fn_list) < 2 or fn_list[1].lower() not in app.config['ALLOWED_EXTENSIONS']:
             raise ValidationError(
                 'Unsupported file extension. Please use a different file.')
 
