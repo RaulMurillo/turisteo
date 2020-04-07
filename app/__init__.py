@@ -55,6 +55,6 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Turisteo startup')
 
-from app import routes, errors#, models
+from app import routes, errors
 # from app.detect import init_gcp_image_api
 # init_gcp_image_api()

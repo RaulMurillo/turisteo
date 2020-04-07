@@ -14,22 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""This application demonstrates how to perform basic operations with the
-Google Cloud Vision API.
-Example Usage:
-python detect.py text ./resources/wakeupcat.jpg
-python detect.py labels ./resources/landmark.jpg
-python detect.py web ./resources/landmark.jpg
-python detect.py web-uri http://wheresgus.com/dog.JPG
-python detect.py web-geo ./resources/city.jpg
-python detect.py faces-uri gs://your-bucket/file.jpg
-python detect.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf \
-gs://BUCKET_NAME/PREFIX/
-python detect.py object-localization ./resources/puppies.jpg
-python detect.py object-localization-uri gs://...
-python detect.py landmarks ./resources/landmark.jpg
-python detect.py landmarks-uri https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=imgres&cd=&cad=rja&uact=8&ved=2ahUKEwi2gdeg5JnoAhUPJBoKHTXzBREQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.alhambra.info%2F&psig=AOvVaw0DZLkTsWWh_RjFmNYgyMdo&ust=1584269048813704
+"""
 For more information, the documentation at
 https://cloud.google.com/vision/docs.
 """

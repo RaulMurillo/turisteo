@@ -24,6 +24,8 @@ import logging
 #     raise Exception(
 #         'Please set/export the environment variable: {}'.format(endpoint_var))
 # endpoint = app.config[endpoint_var]
+
+
 MAX_LENGTH = 2500
 
 
@@ -67,7 +69,7 @@ def translate(text, source_language, dest_language):
         trad_in = split(text)
     else:
         trad_in = [text]
-    
+
     url = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={}&to={}'.format(
         source_language, dest_language)
 
@@ -77,7 +79,7 @@ def translate(text, source_language, dest_language):
         'X-ClientTraceId': str(uuid.uuid4())
     }
     response = [requests.post(url, headers=headers, json=[
-                                  {"text": text}]).json()[0] for text in trad_in]
+        {"text": text}]).json()[0] for text in trad_in]
     # r = requests.post(url, headers=headers, json=[{"text": text}])
     # if r[0].status_code != 200:
     #     return 'Error: the translation service failed.'

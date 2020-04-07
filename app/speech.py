@@ -1,4 +1,3 @@
-
 import os
 import requests
 import time
@@ -28,7 +27,7 @@ def get_token():
             not app.config['SPEECH_SUBCRIPTION_KEY']:
         return 'Error: the translation service is not configured.'
 
-    # TODO: Change Azure region (eastus)
+    # TODO: Change Azure region (eastus->francecentral)
     fetch_token_url = 'https://eastus.api.cognitive.microsoft.com/sts/v1.0/issuetoken'
     headers = {
         'Ocp-Apim-Subscription-Key': app.config['SPEECH_SUBCRIPTION_KEY']
@@ -45,7 +44,7 @@ def text_to_speech(text, lang):
         name = languages[lang][1]
     except KeyError:
         logging.error('Unsupported language for text_to_speech function.')
-        return None    
+        return None
 
     # Get token
     t = time.time()
@@ -73,7 +72,7 @@ def text_to_speech(text, lang):
 
     response = requests.post(constructed_url, headers=headers, data=body)
     if response.status_code == 200:
-        audio_file = 'sample_' + timestr + str(int(t*100)%10000) + '.wav'
+        audio_file = 'sample_' + timestr + str(int(t*100) % 10000) + '.wav'
         with open(os.path.join(app.instance_path, 'audios', audio_file), 'wb') as audio:
             audio.write(response.content)
             logging.info("\nStatus code: " + str(response.status_code) +
