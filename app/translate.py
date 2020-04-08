@@ -83,7 +83,9 @@ def translate(text, source_language, dest_language):
     # r = requests.post(url, headers=headers, json=[{"text": text}])
     # if r[0].status_code != 200:
     #     return 'Error: the translation service failed.'
+    
+    # Merge translated pieces of text
     for r in response[1:]:
         response[0]['translations'][0]['text'] += r['translations'][0]['text']
     logging.info(response)
-    return response
+    return response[:1]

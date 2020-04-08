@@ -101,3 +101,16 @@ def audio_show(filename):
     print(filename)
     return send_from_directory(os.path.join(app.instance_path, 'audios'),
                                filename, as_attachment=True)
+
+                            
+@app.route('/translate', methods=['POST'])
+def translate_text():
+    return jsonify({'text': translate(request.form['text'],
+                                      request.form['source_language'],
+                                      request.form['dest_language']
+                                      )[0]["translations"][0]['text']})
+
+@app.route('/speech', methods=['POST'])
+def speech_from_text():
+    return jsonify({'audio': text_to_speech(request.form['text'],
+                                            lang=request.form['language'])})
