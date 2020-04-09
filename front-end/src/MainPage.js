@@ -1,12 +1,11 @@
 import React from 'react'
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button,Alert  } from 'reactstrap';
 import Image from 'react-bootstrap/Image';
 import './style.css';
 import ImageUploader from 'react-images-upload';
 import Select from 'react-select';
 import {
-    useHistory,
-    useLocation,
+
     withRouter
 } from 'react-router-dom'
 
@@ -22,13 +21,17 @@ class MainPage extends React.Component {
         
         this.state = {
             picture: null,
-            selectedOption: null
+            selectedOption: null,
+            errorAlert: false
         };
     
         this.onDrop = this.onDrop.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleButton = this.handleButton.bind(this);
+        this.onDismiss = this.onDismiss.bind(this);
     }
+
+   
 
     handleChange = selectedOption => {
         this.setState(
@@ -38,12 +41,19 @@ class MainPage extends React.Component {
     };
 
     handleButton = selectedOption => {
-        this.props.history.push({ pathname: '/resultpage', 'state': {
-            'from': {'pathname': this.props.location.pathname },
-            'data': this.state.picture
+        if(this.state.picture != null && this.state.selectedOption != null){
+            this.props.history.push({ pathname: '/resultpage', 'state': {
+                'from': {'pathname': this.props.location.pathname },
+                'data': this.state
+            }
+            });
+        }else{
+            this.setState({errorAlert:true})
         }
-        });
+        
+        
     };
+    
 
     onDrop(picture) {
         this.setState({
@@ -51,9 +61,16 @@ class MainPage extends React.Component {
         });
     }
 
+    onDismiss = selectedOption =>{
+        this.setState({errorAlert:false});
+    }
+
     render() {
         return (
             <Container>
+                 <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
+                                   Introduce una imágen y un idioma
+                </Alert>
                 <Row className="justify-content-md-center">
 
                     <Col md="auto">
@@ -89,10 +106,10 @@ class MainPage extends React.Component {
                     </Col>
 
                 </Row>
-                <Row>
-                    <Button variant="primary" size="lg" block onClick={this.handleButton}>
-                        Submit
-</Button>
+                <Row className="justify-content-md-center" xs lg="6">
+
+                    <Button variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
+   
                 </Row>
                 
 
