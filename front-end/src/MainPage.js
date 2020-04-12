@@ -4,6 +4,7 @@ import Image from 'react-bootstrap/Image';
 import './style.css';
 import ImageUploader from 'react-images-upload';
 import Select from 'react-select';
+import Form from 'react-bootstrap/Form'
 import {
 
     withRouter
@@ -22,15 +23,17 @@ class MainPage extends React.Component {
         this.state = {
             picture: null,
             selectedOption: null,
-            errorAlert: false
+            errorAlert: false,
+            audio: false
         };
+        
     
         this.onDrop = this.onDrop.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleButton = this.handleButton.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
     }
-
+   
    
 
     handleChange = selectedOption => {
@@ -41,10 +44,15 @@ class MainPage extends React.Component {
     };
 
     handleButton = selectedOption => {
+        let {
+            audio
+        } = this.refs
+        this.state.audio = audio.checked;
         if(this.state.picture != null && this.state.selectedOption != null){
             this.props.history.push({ pathname: '/resultpage', 'state': {
                 'from': {'pathname': this.props.location.pathname },
                 'data': this.state
+
             }
             });
         }else{
@@ -103,6 +111,12 @@ class MainPage extends React.Component {
                         />
 
 
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="formBasicCheckbox" >
+                            <Form.Check type="checkbox" className="audio" ref="audio" label="Audio" />
+                            
+                        </Form.Group>
                     </Col>
 
                 </Row>
