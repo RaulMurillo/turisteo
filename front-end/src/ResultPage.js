@@ -7,8 +7,6 @@ import {
 class ResultPage extends React.Component {
     constructor(props) {
         super(props);
-        this.picture = {}
-        this.language = {}
 		let state = this.props.location.state || {from: {}}
         this.picture = state.data.picture || {}
         this.language = state.data.language

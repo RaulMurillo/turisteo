@@ -95,7 +95,7 @@ class MainPage extends React.Component {
                         onChange={this.onDrop}
                         label="max size 20MB"
                         withIcon={true}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                        imgExtension={ ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.ico', '.pdf']}
                         maxFileSize={20971520}
                     />
                 </Row>
