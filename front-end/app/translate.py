@@ -1,6 +1,6 @@
 import json
 import requests
-from app import app
+#from app import app
 import uuid
 import logging
 
@@ -41,7 +41,7 @@ def split(text):
     return paragraphs
 
 
-def short_translate(text, source_language, dest_language):
+def short_translate(text, source_language, dest_language, app):
     if 'TRANSLATOR_TEXT_SUBSCRIPTION_KEY' not in app.config or \
             not app.config['TRANSLATOR_TEXT_SUBSCRIPTION_KEY']:
         return 'Error: the translation service is not configured.'
@@ -60,7 +60,7 @@ def short_translate(text, source_language, dest_language):
     return json.loads(r.content.decode('utf-8-sig'))
 
 
-def translate(text, source_language, dest_language):
+def translate(text, source_language, dest_language, app):
     if 'TRANSLATOR_TEXT_SUBSCRIPTION_KEY' not in app.config or \
             not app.config['TRANSLATOR_TEXT_SUBSCRIPTION_KEY']:
         return 'Error: the translation service is not configured.'

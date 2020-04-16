@@ -2,9 +2,10 @@
 # -*- coding: UTF-8 -*-
 from PIL import Image, ImageDraw
 import logging
+import os
 
 
-def plot_rectangle(image, p0, p1, color='red'):
+def plot_rectangle(image, p0, p1, path, color='red'):
     """Plots rectangle in image.
 
     Args:
@@ -32,7 +33,9 @@ def plot_rectangle(image, p0, p1, color='red'):
 
     new_img_name = img_name + '_square.' + extension
     logging.info(new_img_name)
-    img.save(new_img_name)
+    new_img_name_base = os.path.basename(new_img_name)
+    path_image = path + '\\public' + '\\images\\' + new_img_name_base 
+    img.save(path_image)
     return new_img_name
 
 

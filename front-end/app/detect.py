@@ -25,7 +25,7 @@ from google.protobuf.json_format import MessageToJson
 import logging
 from google.cloud import vision
 import io
-from app.errors import ImageDetectionError
+#from errors import ImageDetectionError
 
 # gcp_client = None
 
@@ -72,11 +72,11 @@ def detect_landmarks(path):
         #     print('Latitude {}'.format(lat_lng.latitude))
         #     print('Longitude {}'.format(lat_lng.longitude))
 
-    if response.error.message:
-        raise Exception(
-            '{}\nFor more info on error messages, check: '
-            'https://cloud.google.com/apis/design/errors'.format(
-                response.error.message))
+    #if response.error.message:
+     #   raise Exception(
+      #      '{}\nFor more info on error messages, check: '
+       #     'https://cloud.google.com/apis/design/errors'.format(
+        #        response.error.message))
 
     annotations = json.loads(MessageToJson(
         response, preserving_proto_field_name=True))
