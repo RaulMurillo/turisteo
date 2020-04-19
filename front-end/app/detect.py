@@ -24,6 +24,7 @@ import json
 from google.protobuf.json_format import MessageToJson
 import logging
 from google.cloud import vision
+from app.errors import ImageDetectionError
 import io
 #from errors import ImageDetectionError
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import Image from 'react-bootstrap/Image'
 import {
     withRouter
@@ -10,36 +10,50 @@ class ResultPage extends React.Component {
         super(props);
         this.picture = {}
         this.language = {}
-        console.log(this.props);
 		this.state = {
             imagen: undefined,
-            text: this.props.location.data.text,
-            title: this.props.location.data.title
+            text: undefined,
+            title: undefined,
+            image_rect: undefined,
+            image_render: false,
+            landmark: undefined
 
         }
-        /*let prev = this.props.location.state || {from: {}}
+        let prev = this.props.location.state || {from: {}}
         this.picture = prev.data.picture || {}
         this.language = prev.data.selectedOption
-        this.filename = this.picture[0].name*/
+        this.filename = this.picture[0].name
+        this.imag = null
 
        
     }
 
 
-    componentDidMount() {
+    componentWillMount() {
         //let state = this.props.location.state || {from: {}}
-        /*const data = new FormData();
+        const data = new FormData();
         data.append('file', this.picture[0]);
-        data.getAll('file')
+        data.append('language', this.language.value);
+        //data.getAll('file')
         fetch('/save',  {
             method: 'POST',
             body: data,
-          });
-        fetch('/detect/'+ this.filename + '/' + this.language.value).then(res => res.json()).then(data => {
-            this.setState({text: data.text, title: data.title});
-          });*/
-        
+          }).then(res => res.json()).then(data => {
+            this.setState({title: data.title, image_rect: data.image_rect, image_render: true, landmark: data.landmark});
+            fetch('/text/'+ this.state.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
+                this.setState({text: data.text});
+                });
+            console.log(this.state.text)
+          }); 
+       
+           
 
+        
+       
+        //this.setState({image_render: true, image_rect: 'alhambra-top_square.jpg'})
+        /*fetch('/detect/'+ this.filename + '/' + this.language.value).then(res => res.json()).then(data => {
+            this.setState({title: data.title, image_rect: data.image_rect, image_render: true});
+          });   */     
 
         
      
@@ -54,16 +68,20 @@ class ResultPage extends React.Component {
 
 
     render() {
+
+        if(this.state.image_render){
+            this.imag = <Image src= {require ('./instance/images/' + this.state.image_rect)} rounded/> 
+            //this.setState({image_render: false})
+            
+        }
         
         return (
+           
             <Container>
                 <h1>{this.state.title}</h1>
                 <Row>
-                    <Col xs={6} md={4}>
-                        <Image src="/images/alhambra-top_square.jpg" rounded />
-                    </Col>
+                    {this.imag}
                 </Row>
-                
                 <p>{this.state.text}</p>
                 
             </Container>

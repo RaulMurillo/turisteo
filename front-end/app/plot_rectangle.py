@@ -34,9 +34,9 @@ def plot_rectangle(image, p0, p1, path, color='red'):
     new_img_name = img_name + '_square.' + extension
     logging.info(new_img_name)
     new_img_name_base = os.path.basename(new_img_name)
-    path_image = path + '\\public' + '\\images\\' + new_img_name_base 
+    path_image = os.path.join(path, 'src', 'instance', 'images', new_img_name_base)
     img.save(path_image)
-    return new_img_name
+    return path_image
 
 
 if __name__ == '__main__':

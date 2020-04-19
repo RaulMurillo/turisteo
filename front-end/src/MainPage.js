@@ -24,9 +24,7 @@ class MainPage extends React.Component {
             picture: null,
             selectedOption: null,
             errorAlert: false,
-            audio: false,
-            text: null,
-            title: null
+            audio: false
         };
         
     
@@ -46,25 +44,11 @@ class MainPage extends React.Component {
     };
 
     handleButton = selectedOption => {
-        
         let {
             audio
         } = this.refs
         this.state.audio = audio.checked;
-        console.log(this.state);
         if(this.state.picture != null && this.state.selectedOption != null){
-            const data = new FormData();
-            data.append('file', this.state.picture[0]);
-            data.append('language', this.state.selectedOption.value)
-            console.log(data)
-            fetch('/save',  {
-                method: 'POST',
-                body: data,
-            })
-    
-            /*fetch('/detect/'+ this.state.picture[0].name + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
-                this.setState({text: data.text, title: data.title});
-              });*/
             this.props.history.push({ pathname: '/resultpage', 'state': {
                 'from': {'pathname': this.props.location.pathname },
                 'data': this.state

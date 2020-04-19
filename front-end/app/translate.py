@@ -3,6 +3,7 @@ import requests
 #from app import app
 import uuid
 import logging
+from app import app
 
 # __subscription_key__ = None
 # __endpoint__ = 'https://api.cognitive.microsofttranslator.com'
@@ -41,7 +42,7 @@ def split(text):
     return paragraphs
 
 
-def short_translate(text, source_language, dest_language, app):
+def short_translate(text, source_language, dest_language):
     if 'TRANSLATOR_TEXT_SUBSCRIPTION_KEY' not in app.config or \
             not app.config['TRANSLATOR_TEXT_SUBSCRIPTION_KEY']:
         return 'Error: the translation service is not configured.'
@@ -60,11 +61,10 @@ def short_translate(text, source_language, dest_language, app):
     return json.loads(r.content.decode('utf-8-sig'))
 
 
-def translate(text, source_language, dest_language, app):
+def translate(text, source_language, dest_language):
     if 'TRANSLATOR_TEXT_SUBSCRIPTION_KEY' not in app.config or \
             not app.config['TRANSLATOR_TEXT_SUBSCRIPTION_KEY']:
         return 'Error: the translation service is not configured.'
-
     if len(text) > MAX_LENGTH:
         trad_in = split(text)
     else:
@@ -80,6 +80,7 @@ def translate(text, source_language, dest_language, app):
     }
     response = [requests.post(url, headers=headers, json=[
         {"text": text}]).json()[0] for text in trad_in]
+
     # r = requests.post(url, headers=headers, json=[{"text": text}])
     # if r[0].status_code != 200:
     #     return 'Error: the translation service failed.'
