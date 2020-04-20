@@ -1,9 +1,11 @@
 import React from 'react';
-import { Container, Row } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import Image from 'react-bootstrap/Image'
 import {
     withRouter
 } from 'react-router-dom'
+
+
 
 class ResultPage extends React.Component {
     constructor(props) {
@@ -11,12 +13,13 @@ class ResultPage extends React.Component {
         this.picture = {}
         this.language = {}
 		this.state = {
-            imagen: undefined,
+            //imagen: undefined,
             text: undefined,
-            title: undefined,
-            image_rect: undefined,
-            image_render: false,
-            landmark: undefined
+            title: undefined
+            //title: undefined,
+            //image_rect: undefined,
+            //image_render: false,
+            //landmark: undefined
 
         }
         let prev = this.props.location.state || {from: {}}
@@ -24,6 +27,9 @@ class ResultPage extends React.Component {
         this.language = prev.data.selectedOption
         this.filename = this.picture[0].name
         this.imag = null
+        this.image_rect = prev.data.image_rect
+        this.title = prev.data.title
+        this.landmark = prev.data.landmark
 
        
     }
@@ -31,7 +37,7 @@ class ResultPage extends React.Component {
 
     componentWillMount() {
         //let state = this.props.location.state || {from: {}}
-        const data = new FormData();
+        /*const data = new FormData();
         data.append('file', this.picture[0]);
         data.append('language', this.language.value);
         //data.getAll('file')
@@ -44,8 +50,10 @@ class ResultPage extends React.Component {
                 this.setState({text: data.text});
                 });
             console.log(this.state.text)
-          }); 
-       
+          }); */
+          fetch('/text/'+ this.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
+            this.setState({text: data.text});
+            });
            
 
         
@@ -69,20 +77,28 @@ class ResultPage extends React.Component {
 
     render() {
 
-        if(this.state.image_render){
-            this.imag = <Image src= {require ('./instance/images/' + this.state.image_rect)} rounded/> 
+       /* if(this.state.image_render){
+            this.imag = <Image src= {require ('./instance/images/' + this.state.image_rect)} style={ {width: 500, height: 500}} rounded/> 
             //this.setState({image_render: false})
             
-        }
+        }*/
         
         return (
            
             <Container>
-                <h1>{this.state.title}</h1>
+                <h1>{this.title}</h1>
                 <Row>
-                    {this.imag}
+                    <Col>
+
+                        <Image src= {require ('./instance/images/' + this.image_rect)} style={ {width: 500, height: 500}} rounded/> 
+                    </Col>
+                    <Col>
+                        <p>{this.state.text}</p>
+                    </Col>
+                    
+                   
                 </Row>
-                <p>{this.state.text}</p>
+                
                 
             </Container>
             

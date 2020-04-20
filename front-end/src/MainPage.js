@@ -24,7 +24,10 @@ class MainPage extends React.Component {
             picture: null,
             selectedOption: null,
             errorAlert: false,
-            audio: false
+            audio: false,
+            title: undefined,
+            image_rect: undefined,
+            landmark: undefined
         };
         
     
@@ -49,12 +52,30 @@ class MainPage extends React.Component {
         } = this.refs
         this.state.audio = audio.checked;
         if(this.state.picture != null && this.state.selectedOption != null){
-            this.props.history.push({ pathname: '/resultpage', 'state': {
-                'from': {'pathname': this.props.location.pathname },
-                'data': this.state
-
-            }
-            });
+            /*const data = new FormData();
+            data.append('file', this.state.picture[0]);
+            console.log(this.state.picture[0])
+            console.log(data.getAll('file'));*/
+            //data.append('language', this.state.selectedOption.value);
+            //data.getAll('file')
+            /*fetch('/save',  {
+                method: 'POST',
+                body: data,
+            }).then(res => res.json()).then(data => {*/
+                //this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
+            
+            //}); 
+            fetch('/title/'+ this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
+                this.setState({title: data.title});
+                this.props.history.push({ pathname: '/resultpage', 'state': {
+                    'from': {'pathname': this.props.location.pathname },
+                    'data': this.state
+    
+                }
+                });
+                });
+            
+            
         }else{
             this.setState({errorAlert:true})
         }
@@ -64,9 +85,21 @@ class MainPage extends React.Component {
     
 
     onDrop(picture) {
-        this.setState({
-            picture
-        });
+        this.setState({picture});
+        console.log(picture)
+        const data = new FormData();
+        data.append('file', picture[0]);
+        console.log(data.getAll('file'));
+        
+        //data.append('language', this.state.selectedOption.value);
+        //data.getAll('file')
+        fetch('/detect',  {
+            method: 'POST',
+            body: data,
+        }).then(res => res.json()).then(data => {
+            this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
+        
+        }); 
     }
 
     onDismiss = selectedOption =>{

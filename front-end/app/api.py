@@ -19,10 +19,11 @@ from config import Config
 
 
 
-@app.route('/save', methods=['POST'])
-def save_image():
+@app.route('/detect', methods=['POST'])
+def detect_image():
     file = request.files['file']
-    lang = request.form['language']
+
+    #lang = request.form['language']
     file.save(os.path.join(app.instance_path, 'images', file.filename))
     #filename = detect(file.filename)
     app.logger.info('[DETECT FUNCTION]')
@@ -33,9 +34,9 @@ def save_image():
     app.logger.info(f'[LANDMARK] {landmark}')
    
 
-    if lang != 'en':    # Translate title
-        r = translate(landmark, source_language='en', dest_language=lang)
-        landmark = r[0]['translations'][0]['text']
+    # if lang != 'en':    # Translate title
+    #     r = translate(landmark, source_language='en', dest_language=lang)
+    #     landmark = r[0]['translations'][0]['text']
     
     # Landmark picture with rectangle
     p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
@@ -44,9 +45,16 @@ def save_image():
         full_img_name, (p0['x'], p0['y']), (p1['x'], p1['y']), os.getcwd()))
     app.logger.info(f'[RECT IMG] {rect_image_path}')
     
-    return jsonify({'title': landmark, 'image_rect': rect_image_path, 'landmark': landmark})
+    return jsonify({'image_rect': rect_image_path, 'landmark': landmark})
 
     
+@app.route('/title/<landmark>/<lang>')
+def get_title(landmark, lang):
+    if lang != 'en':    # Translate title
+        r = translate(landmark, source_language='en', dest_language=lang)
+        landmark = r[0]['translations'][0]['text']
+
+    return jsonify({'title': landmark})
 
 
 # @app.route('/detect/<path:imagename>/<lang>')
@@ -77,6 +85,7 @@ def get_text(landmark, lang):
     url = google_fast_search(query=landmark)
     app.logger.info(f'[URL] {url}')
     info_text = get_entry_text(url)
+
     if lang != 'en':
             trans_text = translate(
                 info_text, source_language='en', dest_language=lang)
