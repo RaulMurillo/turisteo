@@ -85,21 +85,22 @@ class MainPage extends React.Component {
     
 
     onDrop(picture) {
-        this.setState({picture});
-        console.log(picture)
-        const data = new FormData();
-        data.append('file', picture[0]);
-        console.log(data.getAll('file'));
+        if(picture.length != 0){
+            this.setState({picture});
+            const data = new FormData();
+            data.append('file', picture[0]);
+            
+            //data.append('language', this.state.selectedOption.value);
+            //data.getAll('file')
+            fetch('/detect',  {
+                method: 'POST',
+                body: data,
+            }).then(res => res.json()).then(data => {
+                this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
+    
+            }); 
+        }
         
-        //data.append('language', this.state.selectedOption.value);
-        //data.getAll('file')
-        fetch('/detect',  {
-            method: 'POST',
-            body: data,
-        }).then(res => res.json()).then(data => {
-            this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
-        
-        }); 
     }
 
     onDismiss = selectedOption =>{

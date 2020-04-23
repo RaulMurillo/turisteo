@@ -40,9 +40,10 @@ def detect_image():
     
     # Landmark picture with rectangle
     p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
-    
+
     rect_image_path = os.path.basename(plot_rectangle(
-        full_img_name, (p0['x'], p0['y']), (p1['x'], p1['y']), os.getcwd()))
+    full_img_name, p0, p1, os.getcwd()))
+    
     app.logger.info(f'[RECT IMG] {rect_image_path}')
     
     return jsonify({'image_rect': rect_image_path, 'landmark': landmark})

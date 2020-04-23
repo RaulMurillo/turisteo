@@ -17,13 +17,17 @@ def plot_rectangle(image, p0, p1, path, color='red'):
     """
     # get the image
     img = Image.open(image).convert('RGB')
-    # print(im.size)
-    s = min(img.size)//100
-    w = min(10, s)
+    if (len(p0) != 0) and (len(p1) != 0):
 
-    draw = ImageDraw.Draw(img)
-    draw.rectangle((p0, p1), fill=None, outline=color, width=w)
-    del draw
+    # print(im.size)
+        s = min(img.size)//100
+        w = min(10, s)
+        p0 = (p0['x'], p0['y'])
+        p1 = (p1['x'], p1['y'])
+
+        draw = ImageDraw.Draw(img)
+        draw.rectangle((p0, p1), fill=None, outline=color, width=w)
+        del draw
 
     # img.show()
     img_name, extension = image.rsplit('.', 1)
