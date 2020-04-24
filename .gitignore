@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -23,6 +23,7 @@ __pycache__/
 .env.development.local
 .env.test.local
 .env.production.local
+.google-cookie
 
 npm-debug.log*
 yarn-debug.log*
@@ -89,6 +90,7 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+.flaskenv
 
 # Scrapy stuff:
 .scrapy
