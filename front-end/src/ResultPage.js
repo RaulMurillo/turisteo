@@ -16,14 +16,7 @@ class ResultPage extends React.Component {
         this.picture = {}
         this.language = {}
         this.state = {
-            //imagen: undefined,
             text: undefined,
-            title: undefined,
-            image: undefined
-            //title: undefined,
-            //image_rect: undefined,
-            //image_render: false,
-            //landmark: undefined
 
         }
         let prev = this.props.location.state || { from: {} }
@@ -40,61 +33,13 @@ class ResultPage extends React.Component {
 
 
     componentWillMount() {
-        //let state = this.props.location.state || {from: {}}
-        /*const data = new FormData();
-        data.append('file', this.picture[0]);
-        data.append('language', this.language.value);
-        //data.getAll('file')
-        fetch('/save',  {
-            method: 'POST',
-            body: data,
-          }).then(res => res.json()).then(data => {
-            this.setState({title: data.title, image_rect: data.image_rect, image_render: true, landmark: data.landmark});
-            fetch('/text/'+ this.state.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
-                this.setState({text: data.text});
-                });
-            console.log(this.state.text)
-          }); */
-
-        // var fs = require("fs"); // Or `import fs from "fs";` with ESM
-        // console.log(fs);
-
-
-        //if require('./instance/images/' + this.image_rect) ==
-        this.setState({ image: require('./instance/images/' + this.image_rect) })
-        // fs.stat('./instance/images/' + this.image_rect, function(err) {
-        //     if (!err) {
-        //         console.log('file or directory exists');
-        //     }
-        //     else if (err.code === 'ENOENT') {
-        //         console.log('file or directory does not exist');
-        //     }
-        // });
-        // if (fs.existsSync('./instance/images/' + this.image_rect)) {
-        //     this.setState({ image: require('./instance/images/' + this.image_rect) })
-        // }
-        fetch('/text/' + this.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
-            this.setState({ text: data.text });
-        });
-
-
-
-
-        //this.setState({image_render: true, image_rect: 'alhambra-top_square.jpg'})
-        /*fetch('/detect/'+ this.filename + '/' + this.language.value).then(res => res.json()).then(data => {
-            this.setState({title: data.title, image_rect: data.image_rect, image_render: true});
-          });   */
-
-
-
-
+        if(this.landmark!=undefined){
+            fetch('/text/' + this.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
+                this.setState({ text: data.text });
+            });
+        }
+      
     }
-
-
-
-
-
-
 
 
     render() {
@@ -104,7 +49,7 @@ class ResultPage extends React.Component {
              //this.setState({image_render: false})
              
          }*/
-        if (this.state.image != undefined) {
+        if (this.image_rect != undefined) {
             return (
 
                 <Container>
@@ -130,6 +75,7 @@ class ResultPage extends React.Component {
 
                 <Container>
                     <h1>Error</h1>
+                    <p>No se ha podido detectar la imagen</p>
                 </Container>
             );
         }

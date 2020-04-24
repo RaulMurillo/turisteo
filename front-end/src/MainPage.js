@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Button,Alert  } from 'reactstrap';
+import { Container, Row, Col, Button, Alert } from 'reactstrap';
 import Image from 'react-bootstrap/Image';
 import './style.css';
 import ImageUploader from 'react-images-upload';
@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 
 const options = [
-	{ value: 'ar', label: 'Arabic' }, { value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' }
+    { value: 'ar', label: 'Arabic' }, { value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' }
 
 ];
 
@@ -19,7 +19,7 @@ class MainPage extends React.Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             picture: null,
             selectedOption: null,
@@ -29,15 +29,15 @@ class MainPage extends React.Component {
             image_rect: undefined,
             landmark: undefined
         };
-        
-    
+
+
         this.onDrop = this.onDrop.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleButton = this.handleButton.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
     }
-   
-   
+
+
 
     handleChange = selectedOption => {
         this.setState(
@@ -51,67 +51,63 @@ class MainPage extends React.Component {
             audio
         } = this.refs
         this.state.audio = audio.checked;
-        if(this.state.picture != null && this.state.selectedOption != null){
-            /*const data = new FormData();
-            data.append('file', this.state.picture[0]);
-            console.log(this.state.picture[0])
-            console.log(data.getAll('file'));*/
-            //data.append('language', this.state.selectedOption.value);
-            //data.getAll('file')
-            /*fetch('/save',  {
-                method: 'POST',
-                body: data,
-            }).then(res => res.json()).then(data => {*/
-                //this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
-            
-            //}); 
-            fetch('/title/'+ this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
-                this.setState({title: data.title});
-                this.props.history.push({ pathname: '/resultpage', 'state': {
-                    'from': {'pathname': this.props.location.pathname },
-                    'data': this.state
-    
-                }
+        if (this.state.picture != null && this.state.selectedOption != null) {
+            if (this.state.landmark != undefined) {
+                fetch('/title/' + this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
+                    this.setState({ title: data.title });
+                    this.props.history.push({
+                        pathname: '/resultpage', 'state': {
+                            'from': { 'pathname': this.props.location.pathname },
+                            'data': this.state
+
+                        }
+                    });
                 });
+            }else{
+                this.props.history.push({
+                    pathname: '/resultpage', 'state': {
+                        'from': { 'pathname': this.props.location.pathname },
+                        'data': this.state
+
+                    }
                 });
-            
-            
-        }else{
-            this.setState({errorAlert:true})
+            }
+
+
+
+        } else {
+            this.setState({ errorAlert: true })
         }
-        
-        
+
+
     };
-    
+
 
     onDrop(picture) {
-        if(picture.length != 0){
-            this.setState({picture});
+        if (picture.length != 0) {
+            this.setState({ picture });
             const data = new FormData();
             data.append('file', picture[0]);
-            
-            //data.append('language', this.state.selectedOption.value);
-            //data.getAll('file')
-            fetch('/detect',  {
+            fetch('/detect', {
                 method: 'POST',
                 body: data,
             }).then(res => res.json()).then(data => {
-                this.setState({/*title: data.title, */image_rect: data.image_rect, /*image_render: true,*/ landmark: data.landmark});
-    
-            }); 
+                this.setState({ image_rect: data.image_rect, landmark: data.landmark });
+
+            });
         }
-        
+
     }
 
-    onDismiss = selectedOption =>{
-        this.setState({errorAlert:false});
+    onDismiss = selectedOption => {
+        this.setState({ errorAlert: false });
     }
 
     render() {
         return (
             <Container>
-                 <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
-                                   Introduce una imágen y un idioma
+                <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
+                    Introduce una imágen y un idioma
                 </Alert>
                 <Row className="justify-content-md-center">
 
@@ -149,7 +145,7 @@ class MainPage extends React.Component {
                     <Col>
                         <Form.Group controlId="formBasicCheckbox" >
                             <Form.Check type="checkbox" className="audio" ref="audio" label="Audio" />
-                            
+
                         </Form.Group>
                     </Col>
 
@@ -157,9 +153,9 @@ class MainPage extends React.Component {
                 <Row className="justify-content-md-center" xs lg="6">
 
                     <Button variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
-   
+
                 </Row>
-                
+
 
             </Container>
 
