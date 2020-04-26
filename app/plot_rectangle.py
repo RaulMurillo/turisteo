@@ -31,9 +31,6 @@ def plot_rectangle(image, p0, p1, color='red'):
 
         # img.show()
         img_name, extension = image.rsplit('.', 1)
-        # img_name = n[0]
-        # for i in range(1, len(n)-1):
-        #     img_name += '.' + n[i]
 
         new_img_name = img_name + '_square.' + extension
         logging.info(new_img_name)
