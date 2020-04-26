@@ -9,8 +9,8 @@ def plot_rectangle(image, p0, p1, color='red'):
 
     Args:
         image (str): Path of the original image.
-        p0 (tuple): Tuple of `(int, int)` that indicates the first coordinate of the rectangle.
-        p1 (tuple): Tuple of `(int, int)` that indicates the secong coordinate of the rectangle.
+        p0 (dict): Dict with keys 'x' and 'y' that indicates the first coordinate of the rectangle.
+        p1 (dict): Dict with keys 'x' and 'y' that indicates the second coordinate of the rectangle.
     Returns:
         str: Path of the modified image.
     """
@@ -20,19 +20,29 @@ def plot_rectangle(image, p0, p1, color='red'):
     s = min(img.size)//100
     w = min(10, s)
 
-    draw = ImageDraw.Draw(img)
-    draw.rectangle((p0, p1), fill=None, outline=color, width=w)
-    del draw
+    try:
+        p0 = (p0['x'], p0['y'])
+        p1 = (p1['x'], p1['y'])
 
-    # img.show()
-    img_name, extension = image.rsplit('.', 1)
-    # img_name = n[0]
-    # for i in range(1, len(n)-1):
-    #     img_name += '.' + n[i]
+        draw = ImageDraw.Draw(img)
+        draw.rectangle((p0, p1), fill=None, outline=color, width=w)
+        del draw
 
-    new_img_name = img_name + '_square.' + extension
-    logging.info(new_img_name)
-    img.save(new_img_name)
+        # img.show()
+        img_name, extension = image.rsplit('.', 1)
+        # img_name = n[0]
+        # for i in range(1, len(n)-1):
+        #     img_name += '.' + n[i]
+
+        new_img_name = img_name + '_square.' + extension
+        logging.info(new_img_name)
+        img.save(new_img_name)
+    except KeyError:
+        logging.warning('Bad points for rectangle.')
+        new_img_name = image
+    except:
+        logging.warning('Unknown error.')
+        new_img_name = image
     return new_img_name
 
 
