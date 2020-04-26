@@ -95,6 +95,8 @@ class MainPage extends React.Component {
                 this.setState({ image_rect: data.image_rect, landmark: data.landmark });
 
             });
+        }else{
+            this.setState({picture:undefined});
         }
 
     }
