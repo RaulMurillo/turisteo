@@ -14,13 +14,14 @@ def plot_rectangle(image, p0, p1, color='red'):
     Returns:
         str: Path of the modified image.
     """
-    # get the image
-    img = Image.open(image).convert('RGB')
     # print(im.size)
     s = min(img.size)//100
     w = min(10, s)
 
     try:
+        # get the image
+        img = Image.open(image).convert('RGB')
+        # get the points
         p0 = (p0['x'], p0['y'])
         p1 = (p1['x'], p1['y'])
 
