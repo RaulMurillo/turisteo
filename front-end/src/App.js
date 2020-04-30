@@ -7,8 +7,7 @@ import {
 } from "react-router-dom"
 import ResultPage from './ResultPage';
 import MainFunc from './MainFunc';
-import Map from './Map'
-import MapP from './MapP'
+
 
 
 
@@ -22,12 +21,6 @@ class App extends React.Component {
 					</Route>
 					<Route path="/resultpage">
 						<ResultPage />
-					</Route>
-					<Route path="/Map">
-						<Map />
-					</Route>
-					<Route path="/MapP">
-						<MapP />
 					</Route>
 				</Switch>
 			</Router>
