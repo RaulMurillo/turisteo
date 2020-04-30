@@ -1,3 +1,5 @@
+
+  
 import time
 from flask import Flask, request, send_from_directory
 from flask import jsonify
@@ -29,7 +31,7 @@ def detect_image():
     app.logger.info('[DETECT FUNCTION]')
     # Detect landmark on image and search on Google
     full_img_name = os.path.join(app.instance_path, 'images', file.filename)
-    landmarks = detect_landmarks(full_img_name)
+    landmarks, latitud, longitud = detect_landmarks(full_img_name)
     landmark = landmarks[0]['description']
     app.logger.info(f'[LANDMARK] {landmark}')
    
@@ -41,12 +43,11 @@ def detect_image():
     # Landmark picture with rectangle
     p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
 
-    rect_image_path = os.path.basename(plot_rectangle(
-    full_img_name, p0, p1, os.getcwd()))
-    
+    rect_image_path = plot_rectangle(full_img_name, p0, p1)
+    rect_image_path = os.path.basename(rect_image_path)    
     app.logger.info(f'[RECT IMG] {rect_image_path}')
     
-    return jsonify({'image_rect': rect_image_path, 'landmark': landmark})
+    return jsonify({'image_rect': rect_image_path, 'landmark': landmark, 'latitud': latitud, 'longitud': longitud})
 
     
 @app.route('/title/<landmark>/<lang>')
@@ -102,4 +103,8 @@ def get_text(landmark, lang):
 def img_show(filename):
     return send_from_directory(os.path.join(app.instance_path, 'images'),
                                filename, as_attachment=True)
+
+
+
+
 

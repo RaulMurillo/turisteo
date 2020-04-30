@@ -6,7 +6,6 @@ import logging
 
 def plot_rectangle(image, p0, p1, color='red'):
     """Plots rectangle in image.
-
     Args:
         image (str): Path of the original image.
         p0 (dict): Dict with keys 'x' and 'y' that indicates the first coordinate of the rectangle.
@@ -14,13 +13,13 @@ def plot_rectangle(image, p0, p1, color='red'):
     Returns:
         str: Path of the modified image.
     """
-    # print(im.size)
-    s = min(img.size)//100
-    w = min(10, s)
 
     try:
         # get the image
         img = Image.open(image).convert('RGB')
+        # print(im.size)
+        s = min(img.size)//100
+        w = min(10, s)
         # get the points
         p0 = (p0['x'], p0['y'])
         p1 = (p1['x'], p1['y'])
