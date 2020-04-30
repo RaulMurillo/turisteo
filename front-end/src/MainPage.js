@@ -27,7 +27,9 @@ class MainPage extends React.Component {
             audio: false,
             title: undefined,
             image_rect: undefined,
-            landmark: undefined
+            landmark: undefined,
+            latitud: undefined,
+            longitud: undefined
         };
 
 
@@ -52,6 +54,7 @@ class MainPage extends React.Component {
         } = this.refs
         this.state.audio = audio.checked;
         if (this.state.picture != null && this.state.selectedOption != null) {
+
             if (this.state.landmark != undefined) {
                 fetch('/title/' + this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
                     this.setState({ title: data.title });
@@ -92,7 +95,7 @@ class MainPage extends React.Component {
                 method: 'POST',
                 body: data,
             }).then(res => res.json()).then(data => {
-                this.setState({ image_rect: data.image_rect, landmark: data.landmark });
+                this.setState({ image_rect: data.image_rect, landmark: data.landmark, latitud: data.latitud, longitud: data.longitud });
 
             });
         }else{

@@ -12,3 +12,9 @@
     margin-top: 8px;
     margin-left: 10px;
 }
+.scroll_text{
+    height: 900px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+
