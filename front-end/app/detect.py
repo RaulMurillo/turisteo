@@ -52,26 +52,32 @@ def detect_landmarks(path):
     # [START vision_python_migration_landmark_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
-
+    
     image = vision.types.Image(content=content)
 
     response = gcp_client.landmark_detection(image=image, max_results=3)
     landmarks = response.landmark_annotations
-
+    
     if len(landmarks) == 0:
         logging.warning('No landmark detected on picture.')
         # return None
         raise ImageDetectionError
 
     # logging.debug('Landmarks:')
-    # for landmark in landmarks:
-    #     logging.debug(landmark)
-
+    for landmark in landmarks:
+        logging.debug(landmark)
+    
         # print(landmark.description)
-        # for location in landmark.locations:
-        #     lat_lng = location.lat_lng
-        #     print('Latitude {}'.format(lat_lng.latitude))
-        #     print('Longitude {}'.format(lat_lng.longitude))
+
+        for location in landmark.locations:
+            lat_lng = location.lat_lng
+            latitud = lat_lng.latitude
+            longitud = lat_lng.longitude
+          
+        
+    
+    
+    
 
     #if response.error.message:
      #   raise Exception(
@@ -84,7 +90,7 @@ def detect_landmarks(path):
     # print(type(annotations))
     # print(response)
     # print(type(annotations['landmark_annotations']))
-    return annotations['landmark_annotations']
+    return annotations['landmark_annotations'], latitud, longitud
 
     # [END vision_python_migration_landmark_detection]
 # [END vision_landmark_detection]
