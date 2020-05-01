@@ -13,6 +13,7 @@ from app.plot_rectangle import plot_rectangle
 from app.google_search import google_search, google_fast_search
 from app.web_scrap import get_entry_text, get_text_maxChars
 from app.translate import short_translate, translate
+from app.speech import text_to_speech
 from config import Config
 
 
@@ -98,11 +99,9 @@ def get_text(landmark, lang):
     return jsonify({'text': info_text})
 
 
-
-@app.route('/img_show/<filename>')
-def img_show(filename):
-    return send_from_directory(os.path.join(app.instance_path, 'images'),
-                               filename, as_attachment=True)
+@app.route('/speech/<text>/<language>')
+def speech_from_text(text, language):
+    return jsonify({'audio': text_to_speech(text, language)})
 
 
 

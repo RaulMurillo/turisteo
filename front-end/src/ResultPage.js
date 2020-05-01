@@ -1,6 +1,7 @@
+"use strict"
 import React from 'react';
 
-import { Container, Row, Col, TextArea } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 
 import Image from 'react-bootstrap/Image'
 import {
@@ -8,33 +9,72 @@ import {
 } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker, Listing, Text, View } from 'google-maps-react';
 import ReactAudioPlayer from 'react-audio-player';
-
-
+//import fs from 'fs'
 
 
 
 class ResultPage extends React.Component {
     constructor(props) {
         super(props);
-        this.picture = {}
-        this.language = {}
+        // let obj = {
+        //     filename: this.props.location.state.data.picture[0].name,
+        //     language: this.props.location.state.data.selectedOption,
+        //     image_rect: this.props.location.state.data.image_rect,
+        //     title: this.props.location.state.data.title,
+        //     landmark: this.props.location.state.data.landmark,
+        //     latitud: this.props.location.state.data.latitud,
+        //     longitud: this.props.location.state.data.longitud
+        // };
+        
+        // let fs = require('fs'),
+        //     jsonData = JSON.stringify(obj);
+        
+        // fs.writeFile("./props.json", jsonData, err => {
+        //     if (err) {
+        //         console.log('Error writing file', err)
+        //     } else {
+        //         console.log('Successfully wrote file')
+        //     }
+        // })
+        
+   
         this.state = {
             text: undefined,
-            places: []
+            places: [],
+            audio: undefined,
+            // filename: this.props.location.state.data.picture[0].name || {},
+            // language: this.props.location.state.data.selectedOption || {},
+            // image_rect: this.props.location.state.data.image_rect || {},
+            // title: this.props.location.state.data.title || {},
+            // landmark: this.props.location.state.data.landmark || {},
+            // latitud: this.props.location.state.data.latitud || {},
+            // longitud: this.props.location.state.data.longitud || {}
 
         }
-        let prev = this.props.location.state || { from: {} }
-        this.picture = prev.data.picture || {}
-        this.language = prev.data.selectedOption
-        this.filename = this.picture[0].name
-        this.imag = null
-        this.image_rect = prev.data.image_rect
-        this.title = prev.data.title
-        this.landmark = prev.data.landmark
-        this.latitud = prev.data.latitud
-        this.longitud = prev.data.longitud
+        if(typeof this.props.location.state !== 'undefined'){
+            localStorage.setItem('filename', this.props.location.state.data.picture[0].name);
+            localStorage.setItem('language', this.props.location.state.data.selectedOption.value);
+            localStorage.setItem('image_rect', this.props.location.state.data.image_rect);
+            localStorage.setItem('title', this.props.location.state.data.title);
+            localStorage.setItem('landmark', this.props.location.state.data.landmark);
+            localStorage.setItem('latitud', this.props.location.state.data.latitud);
+            localStorage.setItem('longitud', this.props.location.state.data.longitud);
+        }
+        this.filename = localStorage.getItem('filename')
+        this.language = localStorage.getItem('language')
+        this.image_rect = localStorage.getItem('image_rect')
+        this.title = localStorage.getItem('title')
+        this.landmark = localStorage.getItem('landmark')
+        this.latitud = localStorage.getItem('latitud')
+        this.longitud = localStorage.getItem('longitud')
+        //this.text = localStorage.getItem('text')
+    
+
+        
+        
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.crearMarcador = this.crearMarcador.bind(this)
+        this.audio = null
         // this.initMap = this.initMap.bind(this);
         // this.crearMarcador = this.crearMarcador.bind(this);
 
@@ -45,15 +85,30 @@ class ResultPage extends React.Component {
 
 
 
-    componentWillMount() {
+    componentDidMount() {
         //fetch('pruebaCeca.html').then(data => data.text()).then(html=> document.getElementById('elementID').innerHTML = html);
-        if (this.landmark != undefined) {
-            fetch('/text/' + this.landmark + '/' + this.language.value).then(res => res.json()).then(data => {
-                this.setState({ text: data.text });
-            });
+        if(typeof this.props.location.state !== 'undefined'){
+            if (this.landmark != undefined) {
+                fetch('/text/' + this.landmark + '/' + this.language).then(res => res.json()).then(data => {
+                    this.setState({ text: data.text });
+                    localStorage.setItem('text', data.text);
+                    console.log(localStorage.getItem('text'));
+                   // this.text = this.state.text
+                    
+                    fetch('/speech/' + this.state.text + '/' + this.language).then(res => res.json()).then(data => {
+                        localStorage.setItem('audio', data.audio);
+                        this.setState({ audio: data.audio });
+                        
+                    });
+                });
+    
+            }
+        }else{
+            this.setState({text: localStorage.getItem('text')});
+            this.setState({audio: localStorage.getItem('audio')});
 
         }
-        console.log(this.image_rect)
+        
 
 
     }
@@ -174,7 +229,15 @@ class ResultPage extends React.Component {
             height: '500px',
 
         };
-        if (this.image_rect != undefined) {
+        if (typeof this.image_rect !== 'undefined') {
+            if (this.state.audio != undefined) {
+                this.audio = <ReactAudioPlayer
+                    src={require('./instance/audios/' + this.state.audio)}
+                    autoPlay
+                    controls
+                    currentTime
+                />
+            }
 
             return (
 
@@ -204,11 +267,8 @@ class ResultPage extends React.Component {
                             <Container className="scroll_text">
                                 {this.state.text}
                             </Container>
-                            <ReactAudioPlayer
-                                src="my_audio_file.ogg"
-                                autoPlay
-                                controls
-                            />
+                            {this.audio}
+
 
 
                         </Col>

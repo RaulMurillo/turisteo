@@ -19,6 +19,7 @@ class MainPage extends React.Component {
 
     constructor(props) {
         super(props);
+  
 
         this.state = {
             picture: null,
@@ -31,7 +32,8 @@ class MainPage extends React.Component {
             latitud: undefined,
             longitud: undefined
         };
-
+        localStorage.removeItem('text')
+        localStorage.removeItem("audio")
 
         this.onDrop = this.onDrop.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -54,7 +56,6 @@ class MainPage extends React.Component {
         } = this.refs
         this.state.audio = audio.checked;
         if (this.state.picture != null && this.state.selectedOption != null) {
-
             if (this.state.landmark != undefined) {
                 fetch('/title/' + this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
                     this.setState({ title: data.title });
