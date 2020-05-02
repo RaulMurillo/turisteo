@@ -22,6 +22,12 @@ pip install html5lib
 pip install playsound
 pip install num2words
 ```
+or simply by running 
+
+```shell
+pip install -r requirements.txt
+```
+
 The application also makes use of third-party APIs: 
 [Translator Text](https://azure.microsoft.com/en-us/services/cognitive-services/translator-text-api/) and [Text to Speech](https://azure.microsoft.com/en-us/services/cognitive-services/text-to-speech/), from Azure and [Cloud Vision](https://cloud.google.com/vision/docs), from Google Cloud Platform. Therefore, an account on such services is required to execute Turisteo.
 
