@@ -64,18 +64,14 @@ def detect_landmarks(path):
         raise ImageDetectionError
 
     # logging.debug('Landmarks:')
-    for landmark in landmarks:
-        logging.debug(landmark)
-    
-        # print(landmark.description)
+    # for landmark in landmarks:
+    #     logging.debug(landmark)
 
-        for location in landmark.locations:
-            lat_lng = location.lat_lng
-            latitud = lat_lng.latitude
-            longitud = lat_lng.longitude
-          
-        
-    
+        # print(landmark.description)
+        # for location in landmark.locations:
+        #     lat_lng = location.lat_lng
+        #     print('Latitude {}'.format(lat_lng.latitude))
+        #     print('Longitude {}'.format(lat_lng.longitude))
     
     
 
@@ -90,7 +86,7 @@ def detect_landmarks(path):
     # print(type(annotations))
     # print(response)
     # print(type(annotations['landmark_annotations']))
-    return annotations['landmark_annotations'], latitud, longitud
+    return annotations['landmark_annotations']
 
     # [END vision_python_migration_landmark_detection]
 # [END vision_landmark_detection]
