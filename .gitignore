@@ -157,3 +157,5 @@ dmypy.json
 
 # Credentials
 *credentials.*
+
+*config.*
