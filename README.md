@@ -22,4 +22,9 @@ pip install playsound
 pip install num2words
 ```
 
+or simply by running 
+
+```shell
+pip install -r requirements.txt
+```
 
