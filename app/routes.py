@@ -48,8 +48,11 @@ def detect(imagename, lang, speech):
     # Detect landmark on image and search on Google
     full_img_name = os.path.join(app.instance_path, 'images', imagename)
     landmarks = detect_landmarks(full_img_name)
-    landmark = landmarks[0]['description']
+    landmark = landmarks[0]["description"]
+    latitud = landmarks[0]["locations"][0]["lat_lng"]["latitude"]
+    longitud = landmarks[0]["locations"][0]["lat_lng"]["longitude"]
     app.logger.info(f'[LANDMARK] {landmark}')
+    app.logger.info(f'[Lat. Lng.] {latitud}; {longitud}')
     # app.logger.info(f'[GCP API RESPONSE]\n{landmarks}')
     url = google_fast_search(query=landmark)
     app.logger.info(f'[URL] {url}')
@@ -61,8 +64,8 @@ def detect(imagename, lang, speech):
     # Landmark picture with rectangle
     p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
 
-    rect_image_path = os.path.basename(plot_rectangle(
-        full_img_name, p0, p1)) #(p0['x'], p0['y']), (p1['x'], p1['y'])
+    rect_image_path = plot_rectangle(full_img_name, p0, p1)
+    rect_image_path = os.path.basename(rect_image_path)
     app.logger.info(f'[RECT IMG] {rect_image_path}')
     # Informative text
     info_text = get_entry_text(url)
