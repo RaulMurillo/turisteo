@@ -11,7 +11,8 @@ import {
 } from 'react-router-dom'
 
 const options = [
-    { value: 'ar', label: 'Arabic' }, { value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' }
+    { value: 'de', label: 'German' }, { value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' },
+    { value: 'fr', label: 'French' }, { value: 'it', label: 'Italian' }, { value: 'pt', label: 'Portuguese' }
 
 ];
 
@@ -31,7 +32,8 @@ class MainPage extends React.Component {
             landmark: undefined,
             latitud: undefined,
             longitud: undefined,
-            audio: undefined
+            audio: undefined,
+            butonAct: false
         };
         localStorage.removeItem('text')
         localStorage.removeItem("audio")
@@ -100,7 +102,7 @@ class MainPage extends React.Component {
             }).then(res => res.json()).then(data => {
                 this.setState({ image_rect: data.image_rect, landmark: data.landmark, latitud: data.latitud, longitud: data.longitud });
 
-            });
+            }).catch(error => {this.setState({butonAct: true}); console.log(this.state.butonAct)});
         }else{
             this.setState({picture:undefined});
         }
@@ -160,7 +162,7 @@ class MainPage extends React.Component {
                 </Row>
                 <Row className="justify-content-md-center" xs lg="6">
 
-                    <Button variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
+                    <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
 
                 </Row>
 

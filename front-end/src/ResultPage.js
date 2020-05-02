@@ -169,8 +169,9 @@ class ResultPage extends React.Component {
             height: '500px',
 
         };
-        if (typeof this.image_rect !== 'undefined') {
-            if (this.state.audio != undefined) {
+        if (this.image_rect !== 'undefined') {
+            console.log(this.image_rect)
+            if (this.state.audio !== undefined) {
                 this.audio = <ReactAudioPlayer
                     src={require('./instance/audios/' + this.state.audio)}
                     autoPlay
@@ -185,7 +186,7 @@ class ResultPage extends React.Component {
                     <h1>{this.title}</h1>
                     <Row>
                         <Col>
-                            <Image src={require('./instance/images/' + this.image_rect)} style={{ width: 500, height: 500 }} rounded />
+                            <Image className="image" src={require('./instance/images/' + this.image_rect)} style={{ width: 500, height: 350 }} rounded />
                             <Map
                                 google={this.props.google}
                                 zoom={15}
@@ -208,38 +209,8 @@ class ResultPage extends React.Component {
                                 {this.state.text}
                             </Container>
                             {this.audio}
-
-
-
                         </Col>
-
-
                     </Row>
-
-                    {/*<div id='elementID'></div>*/}
-                    {/* <Container>
-                        <Map
-                            googleMapURL= "http:://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyC-hTIvFx317AdIgrB9NewMDbU1WhSB4rY"
-                            loadingElement= {<p>Cargando</p>}
-                        />
-                    </Container> */}
-                    {/* <div style={{ height: '100vh', width: '100%' }}>
-                        <GoogleMapReact
-                            bootstrapURLKeys={{ key: 'AIzaSyC-hTIvFx317AdIgrB9NewMDbU1WhSB4rY'}}
-                            defaultCenter={{lat:59.95, lng:30.33}}
-                            defaultZoom={11}
-                        >
-                            <AnyReactComponent
-                                lat={59.955413}
-                                lng={30.337844}
-                                text="My Marker"
-                            />
-                        </GoogleMapReact>
-                    </div> */}
-
-
-
-
                 </Container>
 
             );
