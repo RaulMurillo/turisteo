@@ -32,10 +32,12 @@ def detect_image():
     app.logger.info('[DETECT FUNCTION]')
     # Detect landmark on image and search on Google
     full_img_name = os.path.join(app.instance_path, 'images', file.filename)
-    landmarks, latitud, longitud = detect_landmarks(full_img_name)
+    landmarks = detect_landmarks(full_img_name)
     landmark = landmarks[0]['description']
+    latitud = landmarks[0]["locations"][0]["lat_lng"]["latitude"]
+    longitud = landmarks[0]["locations"][0]["lat_lng"]["longitude"]
     app.logger.info(f'[LANDMARK] {landmark}')
-   
+    app.logger.info(f'[Lat. Lng.] {latitud}; {longitud}')   
 
     # if lang != 'en':    # Translate title
     #     r = translate(landmark, source_language='en', dest_language=lang)
