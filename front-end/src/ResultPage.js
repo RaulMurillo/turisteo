@@ -59,6 +59,7 @@ class ResultPage extends React.Component {
             localStorage.setItem('landmark', this.props.location.state.data.landmark);
             localStorage.setItem('latitud', this.props.location.state.data.latitud);
             localStorage.setItem('longitud', this.props.location.state.data.longitud);
+            localStorage.setItem('audio_check', this.props.location.state.data.audio);
         }
         this.filename = localStorage.getItem('filename')
         this.language = localStorage.getItem('language')
@@ -67,6 +68,7 @@ class ResultPage extends React.Component {
         this.landmark = localStorage.getItem('landmark')
         this.latitud = localStorage.getItem('latitud')
         this.longitud = localStorage.getItem('longitud')
+        this.audio_check = localStorage.getItem('audio_check')
         //this.text = localStorage.getItem('text')
     
 
@@ -94,12 +96,16 @@ class ResultPage extends React.Component {
                     localStorage.setItem('text', data.text);
                     console.log(localStorage.getItem('text'));
                    // this.text = this.state.text
+                   console.log(this.audio_check)
+                    if(this.audio_check === 'true'){
+                        console.log(this.audio_check)
+                        fetch('/speech/' + this.state.text + '/' + this.language).then(res => res.json()).then(data => {
+                            localStorage.setItem('audio', data.audio);
+                            this.setState({ audio: data.audio });
+                            
+                        });
+                    }
                     
-                    fetch('/speech/' + this.state.text + '/' + this.language).then(res => res.json()).then(data => {
-                        localStorage.setItem('audio', data.audio);
-                        this.setState({ audio: data.audio });
-                        
-                    });
                 });
     
             }
@@ -112,62 +118,7 @@ class ResultPage extends React.Component {
 
 
     }
-    // callback(results, status, infowindow) {
-    //     if (status == google.maps.places.PlacesServiceStatus.OK) {
-    //         for (var i = 0; i < results.length; i++) {
-    //             //var place = results[i];
-    //             this.crearMarcador(results[i]);
-    //         }
-    //     }
-    // }
-
-    // initMap() {
-    //     // Creamos un mapa con las coordenadas actuales
-
-    //     var latLng = new google.maps.LatLng(this.latitud, this.longitud);
-
-    //     var mapOptions = {
-    //         center: latLng,
-    //         zoom: 16,
-    //         mapTypeId: google.maps.MapTypeId.SATELLITE
-    //     };
-
-    //     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-    //     // Creamos el infowindow
-    //     var infowindow = new google.maps.InfoWindow();
-
-    //     // Especificamos la localización, el radio y el tipo de lugares que queremos obtener
-    //     var request = {
-    //         location: latLng,
-    //         radius: 5000,
-    //         //openNow: true, si los queremos abiertos ahora
-    //         types: ['cafe', 'health']
-    //     };
-
-    //     // Creamos el servicio PlaceService y enviamos la petición.
-    //     var service = new google.maps.places.PlacesService(map);
-
-    //     service.nearbySearch(request, this.callback());
-    // }
-
-
-    // crearMarcador(place, infowindow, map) { //var image =dir 
-    //     // Creamos un marcador
-    //     var marker = new google.maps.Marker({
-    //         map: map,
-    //         animation: google.maps.Animation.DROP,
-    //         position: place.geometry.location
-    //         //icon:image para cambiar el icono
-    //     });
-
-    //     // Asignamos el evento click del marcador
-    //     google.maps.event.addListener(marker, 'click', function () {
-    //         infowindow.setContent(place.name + JSON.stringify(place.plus_code) + "" + place.rating + " " + JSON.stringify(place.formatted_phone_number));
-    //         //infowindow.setContent("hola");
-    //         infowindow.open(map, this);
-    //     });
-    // }
+  
     fetchPlaces(mapProps, map) {
         const { google } = mapProps;
         const service = new google.maps.places.PlacesService(map);
@@ -208,22 +159,11 @@ class ResultPage extends React.Component {
             infowindow.open(map, this);
         });
 
-        // Asignamos el evento click del marcador
-        // google.maps.event.addListener(marker, 'click', function() {
-        //   infowindow.setContent(place.name + JSON.stringify(place.plus_code)+"" + place.rating+" " + JSON.stringify(place.formatted_phone_number));
-        //   //infowindow.setContent("hola");
-        //   infowindow.open(map, this);
-        // });
     }
 
 
     render() {
 
-        /* if(this.state.image_render){
-             this.imag = <Image src= {require ('./instance/images/' + this.state.image_rect)} style={ {width: 500, height: 500}} rounded/> 
-             //this.setState({image_render: false})
-             
-         }*/
         const mapStyles = {
             width: '500px',
             height: '500px',

@@ -30,7 +30,8 @@ class MainPage extends React.Component {
             image_rect: undefined,
             landmark: undefined,
             latitud: undefined,
-            longitud: undefined
+            longitud: undefined,
+            audio: undefined
         };
         localStorage.removeItem('text')
         localStorage.removeItem("audio")
@@ -54,7 +55,8 @@ class MainPage extends React.Component {
         let {
             audio
         } = this.refs
-        this.state.audio = audio.checked;
+        // this.state.audio = audio.checked;
+        this.setState({audio: audio.checked});
         if (this.state.picture != null && this.state.selectedOption != null) {
             if (this.state.landmark != undefined) {
                 fetch('/title/' + this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
