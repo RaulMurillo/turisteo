@@ -3,9 +3,16 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, CallbackQueryHandler,
                           MessageHandler, Filters, ConversationHandler)
 
-from config import CONFIG
+from apis.detect import detect_landmarks
+from apis.plot_rectangle import plot_rectangle
+from apis.google_search import google_search, google_fast_search
+from apis.web_scrap import get_entry_text, get_text_maxChars
+from apis.translate import short_translate, translate
+from apis.speech import text_to_speech
+
 import texts
 import util
+import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,34 +23,38 @@ logger = logging.getLogger(__name__)
 END = ConversationHandler.END
 
 # Different constants for this example
-(START_OVER, LANG, AUDIO, PHOTO) = map(chr, range(10, 15))
+(START_OVER, LANG, AUDIO, PHOTO) = map(chr, range(10, 14))
 
-# List of ingredients available in the system
-# with open((COMMON_DIR / 'ingredients_es.csv'), 'r') as f:
-#     INGREDIENTS = list(csv.reader(f))[0]
+# Keyboard buttons
+button_list = ['/start', '/help', '/exit']
+keyboard = ReplyKeyboardMarkup(util.build_menu(button_list, n_cols=1))
 
-# Pictures folder
-# PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+PHOTO_DIR = None
 
 
 def start(update, context):
-    """Select an action: query by recipes/ingredients or add preferences."""
-
-    text = 'Puedo ayudarte a proponerte una receta con los ingredientes que me mandes en una imagen.\n' + \
-        'Tambien puedes indicar tus preferencias y alergias.\n' + \
-        'Selecciona la opción de que desees y pulsa <code>/exit</code> cuando hayas terminado\n\n'
-
-    buttons = [['Quiero cocinar algo, pero no se me ocurre nada', 'Quiero preparar una receta concreta'],
-               ['Añadir preferencia', 'Añadir alergia'],
-               ['/exit']]
-    keyboard = ReplyKeyboardMarkup(buttons, one_time_keyboard=True)
+    """Displays welcome message."""
 
     # If we're starting over we don't need do send a new message
     if not context.user_data.get(START_OVER):
+        user = update.message.from_user
+        try:
+            context.user_data[LANG] = user.language_code
+            logger.info(f'User language: {texts.LANGUAGE[context.user_data[LANG]]["name"]}')
+        except:
+            # Default lang
+            context.user_data[LANG] = 'en' 
+        
         update.message.reply_text(
-            'Hola! Me llamo DASI-Chef Bot pero puedes llamarme Chef Bot.')
+            texts.WELCOME[context.user_data[LANG]] + ' \U0001F5FA', parse_mode=ParseMode.HTML)
+
+
+    text = texts.COMMANDS[context.user_data[LANG]]
+
     update.message.reply_text(
-        text=text, parse_mode=ParseMode.HTML, )  # resize_keyboard=True, reply_markup=keyboard)
+        text=text, parse_mode=ParseMode.HTML,
+        # resize_keyboard=True, reply_markup=keyboard
+        )
 
     # Clear user context
     context.user_data.clear()
@@ -58,13 +69,14 @@ def help(update, context):
 
     text = 'Información actualmente no disponible :('
     update.message.reply_text(text=text)
+    # update.message.reply_text(texts.INFO[context.user_data[LANG]])
     # return SELECTING_ACTION
 
 
 def done(update, context):
     """Closes user conversation."""
 
-    update.message.reply_text('Hasta la próxima!')
+    update.message.reply_text(texts.BYE[context.user_data[LANG]])
 
     context.user_data.clear()
     return ConversationHandler.END
@@ -132,13 +144,13 @@ def select_audio(update, context):
 def process_audio(update, context):
     query = update.callback_query
     query.answer()
+    context.user_data[AUDIO] = (query.data == 'yes')
 
     selection = '{} {}'.format(texts.YES_NO[context.user_data[LANG]]
-                               [query.data], u'\U0001F50A' if query.data == 'yes' else u'\U0001F507')
+                               [query.data], u'\U0001F50A' if context.user_data[AUDIO] else u'\U0001F507')
     query.edit_message_text(
         text="{}\n{}".format(query.message.text, selection)
     )
-    context.user_data[AUDIO] = query.data
 
     return select_pict(update, context)
 
@@ -150,7 +162,7 @@ def select_pict(update, context):
     query.bot.send_message(
         chat_id=query.message.chat_id,
         text=texts.INSERT_PICT[context.user_data[LANG]],
-        reply_markup=langs_markup,
+        reply_markup=keyboard,
         resize_keyboard=True,
     )
 
@@ -158,14 +170,79 @@ def select_pict(update, context):
 
 
 def process_pict(update, context):
-    pass
+    """Processes the image to generate the information."""
+    # update.message.reply_text(
+    #         'Genial! Voy a ver qué puedo hacer con todos estos ingredientes...')
+
+    photo_file = update.message.photo[-1].get_file()
+    currentDT = datetime.datetime.now()
+
+    photo_name = 'user_photo' + \
+        currentDT.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg'
+
+    photo_path = PHOTO_DIR / photo_name
+    photo_file.download(photo_path)
+    logger.info("Image updated at %s", photo_path)
 
 
+    context.user_data[PHOTO] = photo_path
+
+    return display_info(update, context)
+
+@util.send_action(ChatAction.TYPING)
 def display_info(update, context):
-    pass
+    img_name = context.user_data[PHOTO]
+    lang = context.user_data[LANG]
+    speech = context.user_data[AUDIO]
+
+    # Detect landmark on image
+    landmarks = detect_landmarks(img_name)
+    landmark = landmarks[0]['description']
+    lat = landmarks[0]["locations"][0]["lat_lng"]["latitude"]
+    lng = landmarks[0]["locations"][0]["lat_lng"]["longitude"]
+    logger.info(f'[LANDMARK] {landmark}')
+    logger.info(f'[Lat. Lng.] {lat}; {lng}')
+    # Get URL
+    url = google_fast_search(query=landmark)
+    logger.info(f'[URL] {url}')
+    # Translate landmark name
+    # if lang != 'en':    # Translate title
+    landmark = short_translate(landmark, source_language='en', dest_language=lang)
+        # landmark = r[0]['translations'][0]['text']
+    # Display landmark name
+    update.message.reply_text(
+            text='<b><u>' + landmark + '</u></b>', parse_mode=ParseMode.HTML)
+    
+    # Landmark picture with rectangle
+    p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
+    rect_image_path = plot_rectangle(img_name, p0, p1)
+    logger.info(f'[RECT IMG] {rect_image_path}')
+    update.message.reply_photo(photo=open(rect_image_path, 'rb'))
+    # Get informative text
+    info_text = get_entry_text(url)
+    if len(info_text) < 500:
+        info_text = get_text_maxChars(url, maxChars=5000)
+    logger.info('[INFO TEXT SCRAPPED]')
+    # Translate text
+    trans_text = translate(
+        info_text, source_language='en', dest_language=lang)
+    logger.info('[TRADUCCION DONE]')
+    for t in trans_text:
+        update.message.reply_text(t)
+
+    # Generate audio
+    if speech:
+        audio_file = text_to_speech(''.join(trans_text), lang=lang)
+        # audio = text_to_speech("Hola mundo!", lang=lang)
+
+        # os.path.join(app.instance_path, 'audios', audio)
+        logger.info(f'[AUDIO] {audio_file}')
+        update.message.reply_audio(open(audio_file, 'rb'))
+
+    return select_pict(update, context)
 
 
-def telegramBot_main(token):
+def telegramBot_main(token, photo_dir):
     """Creates and launches the Telegram Bot."""
 
     # Create the Updater and pass it your bot's token.
@@ -182,7 +259,9 @@ def telegramBot_main(token):
         states={
             SELECTING_LANG: [CallbackQueryHandler(process_lang, pattern='(en|es|fr|it|pt|de)')],
             SELECTING_AUDIO: [CallbackQueryHandler(process_audio, pattern='(yes|no)')],
-            SELECTING_PICT: [MessageHandler(Filters.photo, process_pict), ]
+            SELECTING_PICT: [MessageHandler(Filters.photo, process_pict), ],
+            DISPLAY_INFO: [CallbackQueryHandler(done, pattern='no'),
+                        CallbackQueryHandler(select_pict, pattern='yes')],
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -199,6 +278,11 @@ def telegramBot_main(token):
     # Start the Bot
     updater.start_polling()
 
+    # Pictures folder
+    global PHOTO_DIR
+    PHOTO_DIR = photo_dir
+    PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
@@ -206,8 +290,13 @@ def telegramBot_main(token):
 
 
 if __name__ == "__main__":
+    from credentials import TELEGRAM_CONFIG as CONFIG
+    import os
+
     logging.root.setLevel(logging.INFO)
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    telegramBot_main(CONFIG['telegram_token'])
+    # PHOTO_DIR = CONFIG['UPLOADS_DIR']
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = CONFIG['GOOGLE_APPLICATION_CREDENTIALS']
+    telegramBot_main(token=CONFIG['TELEGRAM_TOKEN'], photo_dir = CONFIG['UPLOADS_DIR'])
