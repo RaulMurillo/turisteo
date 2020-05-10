@@ -17,12 +17,12 @@ WELCOME = {
 }
 
 COMMANDS = {
-    'en': 'Useful commands:\n\u2022<code>/settings</code> - Start again\n\u2022<code>/help</code>   - Display user\'s guide\n\u2022<code>/exit</code>  - Quit\n',
-    'es': 'Comandos útiles:\n\u2022<code>/settings</code> - Empezar de nuevo\n\u2022<code>/help</code>   - Mostrar la guía del usuario\n\u2022<code>/exit</code>  - Salir\n',
-    'fr': 'Commandes utiles:\n\u2022<code>/settings</code> - Recommencer\n\u2022<code>/help</code>   - Afficher le guide de l\'utilisateur\n\u2022<code>/exit</code>  - Quitter\n',
-    'it': 'Comandi utili:\n\u2022<code>/settings</code> - Ricomincia\n\u2022<code>/help</code>   - Visualizza la guida dell\'utente\n\u2022<code>/exit</code>  - Smettere\n',
-    'pt': 'Comandos úteis:\n\u2022<code>/settings</code> - Comece de novo\n\u2022<code>/help</code>   - Exibir guia do usuário\n\u2022<code>/exit</code>  - Sair\n',
-    'de': 'Nützliche Befehle:\n\u2022<code>/settings</code> - Nochmal beginnen\n\u2022<code>/help</code>   - Benutzerhandbuch anzeigen\n\u2022<code>/exit</code>  - Verlassen\n',
+    'en': 'Useful commands:\n\u2022<code>/settings</code> - Change settings\n\u2022<code>/help</code>   - Display user\'s guide\n\u2022<code>/exit</code>  - Quit\n',
+    'es': 'Comandos útiles:\n\u2022<code>/settings</code> - Cambiar ajustes\n\u2022<code>/help</code>   - Mostrar la guía del usuario\n\u2022<code>/exit</code>  - Salir\n',
+    'fr': 'Commandes utiles:\n\u2022<code>/settings</code> - Modifier les paramètres\n\u2022<code>/help</code>   - Afficher le guide de l\'utilisateur\n\u2022<code>/exit</code>  - Quitter\n',
+    'it': 'Comandi utili:\n\u2022<code>/settings</code> - Cambia impostazioni\n\u2022<code>/help</code>   - Visualizza la guida dell\'utente\n\u2022<code>/exit</code>  - Smettere\n',
+    'pt': 'Comandos úteis:\n\u2022<code>/settings</code> - Mudar configurações\n\u2022<code>/help</code>   - Exibir guia do usuário\n\u2022<code>/exit</code>  - Sair\n',
+    'de': 'Nützliche Befehle:\n\u2022<code>/settings</code> - Einstellungen ändern\n\u2022<code>/help</code>   - Benutzerhandbuch anzeigen\n\u2022<code>/exit</code>  - Verlassen\n',
 }
 
 AUDIO_QUESTION = {

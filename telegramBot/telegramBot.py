@@ -264,7 +264,7 @@ def telegramBot_main(token, photo_dir):
                         CallbackQueryHandler(select_pict, pattern='yes')],
         },
         fallbacks=[
-            CommandHandler('start', start),
+            CommandHandler('settings', select_lang),
             CommandHandler('help', help),
             CommandHandler('exit', done),
         ]
