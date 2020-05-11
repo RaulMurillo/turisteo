@@ -69,3 +69,21 @@ INSERT_PICT = {
     'pt': 'Introduza uma foto do monumento sobre o qual você deseja obter informações',
     'de': 'Stellen Sie ein Foto des Denkmals vor, über das Sie Informationen erhalten möchten',
 }
+
+CONTINUE_QUESTION = {
+    'en': 'Do you want to make another query?',
+    'es': '¿Quieres hacer otra consulta?',
+    'fr': 'Voulez-vous faire une autre requête?',
+    'it': 'Vuoi fare un\'altra domanda?',
+    'pt': 'Deseja fazer outra consulta?',
+    'de': 'Möchten Sie eine weitere Abfrage stellen?',
+}
+
+NO_LANDMARK = {
+    'en': "Sorry, I didn't detect any monument in the photo.",
+    'es': "Lo siento, no detecté ningún monumento en la foto.",
+    'fr': "Désolé, je n'ai détecté aucun monument sur la photo.",
+    'it': "Spiacenti, non ho rilevato alcun monumento nella foto.",
+    'pt': "Desculpe, eu não detectei nenhum monumento na foto.",
+    'de': "Entschuldigung, ich habe auf dem Foto kein Denkmal entdeckt.",
+}

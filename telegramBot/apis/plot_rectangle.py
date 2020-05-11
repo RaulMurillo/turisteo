@@ -15,7 +15,6 @@ def plot_rectangle(image, p0, p1, color='red'):
     """
 
     try:
-        print('[plot_rect]')
         # get the image
         img = Image.open(image).convert('RGB')
         # print(im.size)
@@ -24,24 +23,22 @@ def plot_rectangle(image, p0, p1, color='red'):
         # get the points
         p0 = (p0['x'], p0['y'])
         p1 = (p1['x'], p1['y'])
-        print('[plot_rect] - got points p0, p1')
 
         draw = ImageDraw.Draw(img)
         draw.rectangle((p0, p1), fill=None, outline=color, width=w)
         del draw
-        print('[plot_rect] - Rectangle drawn')
 
         # img.show()
-        print('[plot_rect] - img_name', image)
+        logging.debug('[plot_rect] - img_name', image)
         img_name, extension = str(image).rsplit('.', 1)
 
         new_img_name = img_name + '_square.' + extension
         
-        print('[plot_rect] - new_img_name:', new_img_name)
-        logging.info(new_img_name)
+        logging.debug('[plot_rect] - new_img_name:', new_img_name)
+        logging.debug(new_img_name)
         img.save(new_img_name)
         
-        print('[plot_rect] - IMG saved')
+        logging.debug('[plot_rect] - IMG saved')
     except KeyError:
         logging.warning('Bad points for rectangle.')
         new_img_name = image

@@ -10,6 +10,8 @@ from apis.web_scrap import get_entry_text, get_text_maxChars
 from apis.translate import short_translate, translate
 from apis.speech import text_to_speech
 
+# from multiprocessing import Process
+from telegram.ext.dispatcher import run_async, sleep
 import texts
 import util
 import datetime
@@ -23,10 +25,10 @@ logger = logging.getLogger(__name__)
 END = ConversationHandler.END
 
 # Different constants for this example
-(START_OVER, LANG, AUDIO, PHOTO) = map(chr, range(10, 14))
+(START_OVER, LANG, AUDIO, PHOTO, LANDMARK, LAT, LNG) = map(chr, range(10, 17))
 
 # Keyboard buttons
-button_list = ['/start', '/help', '/exit']
+button_list = ['/start', '/settings', '/help', '/exit']
 keyboard = ReplyKeyboardMarkup(util.build_menu(button_list, n_cols=1))
 
 PHOTO_DIR = None
@@ -34,27 +36,29 @@ PHOTO_DIR = None
 
 def start(update, context):
     """Displays welcome message."""
+    # choose_lang = True
 
     # If we're starting over we don't need do send a new message
     if not context.user_data.get(START_OVER):
         user = update.message.from_user
         try:
             context.user_data[LANG] = user.language_code
-            logger.info(f'User language: {texts.LANGUAGE[context.user_data[LANG]]["name"]}')
+            logger.info(
+                f'User language: {texts.LANGUAGE[context.user_data[LANG]]["name"]}')
+            # choose_lang = False
         except:
             # Default lang
-            context.user_data[LANG] = 'en' 
-        
+            context.user_data[LANG] = 'en'
+
         update.message.reply_text(
             texts.WELCOME[context.user_data[LANG]] + ' \U0001F5FA', parse_mode=ParseMode.HTML)
-
 
     text = texts.COMMANDS[context.user_data[LANG]]
 
     update.message.reply_text(
         text=text, parse_mode=ParseMode.HTML,
         # resize_keyboard=True, reply_markup=keyboard
-        )
+    )
 
     # Clear user context
     context.user_data.clear()
@@ -75,8 +79,15 @@ def help(update, context):
 
 def done(update, context):
     """Closes user conversation."""
-
-    update.message.reply_text(texts.BYE[context.user_data[LANG]])
+    if update.message != None:
+        update.message.reply_text(texts.BYE[context.user_data[LANG]])
+    else:
+        query = update.callback_query
+        query.answer()
+        query.bot.send_message(
+            chat_id=query.message.chat_id,
+            text=texts.BYE[context.user_data[LANG]],
+        )
 
     context.user_data.clear()
     return ConversationHandler.END
@@ -87,11 +98,11 @@ def error(update, context):
 
     logger.error('Update "%s" caused error "%s"', update, context.error)
 
-# https://github.com/dizballanze/m00dbot/blob/master/bot.py
-
 
 def select_lang(update, context):
-    # Select language
+
+    context.user_data.clear()
+    # Select language # https://github.com/dizballanze/m00dbot/blob/master/bot.py
     button_list = [
         InlineKeyboardButton('{} {}'.format(texts.LANGUAGE[l]['name'], util.flag(texts.LANGUAGE[l]['flag'])), callback_data=l) for l in texts.LANGUAGE
     ]
@@ -184,10 +195,61 @@ def process_pict(update, context):
     photo_file.download(photo_path)
     logger.info("Image updated at %s", photo_path)
 
-
     context.user_data[PHOTO] = photo_path
 
     return display_info(update, context)
+
+@run_async
+@util.send_action(ChatAction.TYPING)
+def display_name(update, context):
+    # Translate landmark name
+    landmark = short_translate(
+        context.user_data[LANDMARK], source_language='en', dest_language=context.user_data[LANG])
+    # Display landmark name
+    update.message.reply_text(
+        text='<b><u>' + landmark + '</u></b>', parse_mode=ParseMode.HTML)
+    
+    sleep(1)
+    # Display landmark location
+    update.message.reply_location(
+        latitude=context.user_data[LAT], longitude=context.user_data[LNG])
+    
+    logger.info(f'[LANDMARK] {context.user_data[LANDMARK]}')
+    logger.info(
+        f'[Lat. Lng.] {context.user_data[LAT]}; {context.user_data[LNG]}')
+
+@run_async
+@util.send_action(ChatAction.UPLOAD_PHOTO)
+def display_image(update, context, landmarks):
+    # Landmark picture with rectangle
+    p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
+    rect_image_path = plot_rectangle(context.user_data[PHOTO], p0, p1)
+    # sleep(1)
+    update.message.reply_photo(photo=open(rect_image_path, 'rb'))
+    logger.info(f'[RECT IMG] {rect_image_path}')
+
+@run_async
+@util.send_action(ChatAction.TYPING)
+def display_text(update, context, trans_text):
+    for t in trans_text:
+        sleep(0.75)
+        update.message.reply_text(t)
+
+    return
+
+@run_async
+def generate_audio(update, context, trans_text):
+    audio_file = text_to_speech(
+        ''.join(trans_text), lang=context.user_data[LANG])
+    return audio_file
+
+
+@util.send_action(ChatAction.RECORD_AUDIO)
+def display_audio(update, context, audio_promise):
+    audio_file = audio_promise.result()
+    logger.info(f'[AUDIO] {audio_file}')
+    update.message.reply_voice(open(audio_file, 'rb'))
+
 
 @util.send_action(ChatAction.TYPING)
 def display_info(update, context):
@@ -196,50 +258,83 @@ def display_info(update, context):
     speech = context.user_data[AUDIO]
 
     # Detect landmark on image
-    landmarks = detect_landmarks(img_name)
-    landmark = landmarks[0]['description']
-    lat = landmarks[0]["locations"][0]["lat_lng"]["latitude"]
-    lng = landmarks[0]["locations"][0]["lat_lng"]["longitude"]
-    logger.info(f'[LANDMARK] {landmark}')
-    logger.info(f'[Lat. Lng.] {lat}; {lng}')
-    # Get URL
-    url = google_fast_search(query=landmark)
-    logger.info(f'[URL] {url}')
-    # Translate landmark name
-    # if lang != 'en':    # Translate title
-    landmark = short_translate(landmark, source_language='en', dest_language=lang)
-        # landmark = r[0]['translations'][0]['text']
-    # Display landmark name
+    try:
+        landmarks = detect_landmarks(img_name)
+
+        context.user_data[LANDMARK] = landmarks[0]['description']
+        context.user_data[LAT] = landmarks[0]["locations"][0]["lat_lng"]["latitude"]
+        context.user_data[LNG] = landmarks[0]["locations"][0]["lat_lng"]["longitude"]
+        ######
+        # p_name = Process(target=display_name, args=(update, context))
+        # p_name.start()
+        display_name(update, context)
+        ######
+
+        # Get URL
+        url = google_fast_search(query=context.user_data[LANDMARK])
+        logger.info(f'[URL] {url}')
+
+        ######
+        # p_image = Process(target=display_image, args=(update, context, landmarks))
+        # p_image.start()
+        display_image(update, context, landmarks)
+        ######
+
+        # Get informative text
+        info_text = get_entry_text(url)
+        if len(info_text) < 500:
+            info_text = get_text_maxChars(url, maxChars=5000)
+        # logger.info('[INFO TEXT SCRAPPED]')
+        # Translate text
+        trans_text = translate(
+            info_text, source_language='en', dest_language=lang)
+        # logger.info('[TRADUCCION DONE]')
+
+        ######
+        # p_text = Process(target=display_text, args=(update, context, trans_text))
+        # p_text.start()
+        text_promise = display_text(update, context, trans_text)
+        ######
+
+        # Generate audio
+        if speech:
+            ######
+            # p_audio = Process(target=display_audio, args=(update, context, trans_text))
+            # p_audio.start()
+            audio_promise = generate_audio(update, context, trans_text)
+            text_promise.result()
+            display_audio(update, context, audio_promise)
+            ######
+        else:
+            text_promise.result()
+    except:
+        update.message.reply_text(
+            text=texts.NO_LANDMARK[context.user_data[LANG]] + u' \U0001F625',
+            # parse_mode=ParseMode.HTML,
+        )
+
+        # ######
+        # p_name.join()
+        # p_image.join()
+        # p_text.join()
+        # p_audio.join()
+        # ######
+
+    # Ask to continue
+    button_list = [
+        InlineKeyboardButton('{} {}'.format(
+            texts.YES_NO[context.user_data[LANG]]['yes'], u'\U0001F44D'), callback_data='yes'),
+        InlineKeyboardButton('{} {}'.format(
+            texts.YES_NO[context.user_data[LANG]]['no'], u'\U0001F44E'), callback_data='no'),
+    ]
+    langs_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=2))
+
     update.message.reply_text(
-            text='<b><u>' + landmark + '</u></b>', parse_mode=ParseMode.HTML)
-    
-    # Landmark picture with rectangle
-    p0, _, p1, _ = landmarks[0]['bounding_poly']['vertices']
-    rect_image_path = plot_rectangle(img_name, p0, p1)
-    logger.info(f'[RECT IMG] {rect_image_path}')
-    update.message.reply_photo(photo=open(rect_image_path, 'rb'))
-    # Get informative text
-    info_text = get_entry_text(url)
-    if len(info_text) < 500:
-        info_text = get_text_maxChars(url, maxChars=5000)
-    logger.info('[INFO TEXT SCRAPPED]')
-    # Translate text
-    trans_text = translate(
-        info_text, source_language='en', dest_language=lang)
-    logger.info('[TRADUCCION DONE]')
-    for t in trans_text:
-        update.message.reply_text(t)
-
-    # Generate audio
-    if speech:
-        audio_file = text_to_speech(''.join(trans_text), lang=lang)
-        # audio = text_to_speech("Hola mundo!", lang=lang)
-
-        # os.path.join(app.instance_path, 'audios', audio)
-        logger.info(f'[AUDIO] {audio_file}')
-        update.message.reply_audio(open(audio_file, 'rb'))
-
-    return select_pict(update, context)
+        text=texts.CONTINUE_QUESTION[context.user_data[LANG]],
+        reply_markup=langs_markup,
+        resize_keyboard=True,
+    )
+    return DISPLAY_INFO
 
 
 def telegramBot_main(token, photo_dir):
@@ -261,7 +356,7 @@ def telegramBot_main(token, photo_dir):
             SELECTING_AUDIO: [CallbackQueryHandler(process_audio, pattern='(yes|no)')],
             SELECTING_PICT: [MessageHandler(Filters.photo, process_pict), ],
             DISPLAY_INFO: [CallbackQueryHandler(done, pattern='no'),
-                        CallbackQueryHandler(select_pict, pattern='yes')],
+                           CallbackQueryHandler(select_pict, pattern='yes')],
         },
         fallbacks=[
             CommandHandler('settings', select_lang),
@@ -298,5 +393,8 @@ if __name__ == "__main__":
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     # PHOTO_DIR = CONFIG['UPLOADS_DIR']
+    CONFIG['UPLOADS_DIR'].mkdir(parents=True, exist_ok=True)
+    CONFIG['AUDIOS_DIR'].mkdir(parents=True, exist_ok=True)
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = CONFIG['GOOGLE_APPLICATION_CREDENTIALS']
-    telegramBot_main(token=CONFIG['TELEGRAM_TOKEN'], photo_dir = CONFIG['UPLOADS_DIR'])
+    telegramBot_main(token=CONFIG['TELEGRAM_TOKEN'],
+                     photo_dir=CONFIG['UPLOADS_DIR'])
