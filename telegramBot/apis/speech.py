@@ -24,7 +24,7 @@ def get_token():
         return 'Error: the translation service is not configured.'
 
     # TODO: Change Azure region (eastus->francecentral)
-    fetch_token_url = 'https://eastus.api.cognitive.microsoft.com/sts/v1.0/issuetoken'
+    fetch_token_url = 'https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issuetoken' #'https://eastus.api.cognitive.microsoft.com/sts/v1.0/issuetoken'
     headers = {
         'Ocp-Apim-Subscription-Key': CONFIG['SPEECH_SUBCRIPTION_KEY']
     }
@@ -49,11 +49,11 @@ def text_to_speech(text, lang):
     access_token = get_token()
 
     # Save audio
-    constructed_url = 'https://eastus.tts.speech.microsoft.com/cognitiveservices/v1'
+    constructed_url = 'https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1' #'https://eastus.tts.speech.microsoft.com/cognitiveservices/v1'
     headers = {
         'Authorization': 'Bearer ' + access_token,
         'Content-Type': 'application/ssml+xml',
-        'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
+        'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',#'riff-24khz-16bit-mono-pcm',
         'User-Agent': 'TMI-speech'
     }
     xml_body = ElementTree.Element('speak', version='1.0')
@@ -68,7 +68,7 @@ def text_to_speech(text, lang):
 
     response = requests.post(constructed_url, headers=headers, data=body)
     if response.status_code == 200:
-        audio_file = 'sample_' + timestr + str(int(t*100) % 10000) + '.wav'
+        audio_file = 'sample_' + timestr + str(int(t*100) % 10000) + '.mp3'#.wav'
         with open((CONFIG['AUDIOS_DIR'] / audio_file), 'wb') as audio:
             audio.write(response.content)
             logging.info("\nStatus code: " + str(response.status_code) +
