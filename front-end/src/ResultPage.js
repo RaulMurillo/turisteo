@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker, Listing, Text, View } from 'google-maps-react';
 import ReactAudioPlayer from 'react-audio-player';
+import Form from 'react-bootstrap/Form'
 //import fs from 'fs'
 
 
@@ -25,10 +26,10 @@ class ResultPage extends React.Component {
         //     latitud: this.props.location.state.data.latitud,
         //     longitud: this.props.location.state.data.longitud
         // };
-        
+
         // let fs = require('fs'),
         //     jsonData = JSON.stringify(obj);
-        
+
         // fs.writeFile("./props.json", jsonData, err => {
         //     if (err) {
         //         console.log('Error writing file', err)
@@ -36,12 +37,17 @@ class ResultPage extends React.Component {
         //         console.log('Successfully wrote file')
         //     }
         // })
-        
-   
+
+
         this.state = {
             text: undefined,
             places: [],
             audio: undefined,
+            checked0: false,
+            checked1: false,
+            mapProps: undefined,
+            map: undefined,
+            markers: [],
             // filename: this.props.location.state.data.picture[0].name || {},
             // language: this.props.location.state.data.selectedOption || {},
             // image_rect: this.props.location.state.data.image_rect || {},
@@ -51,7 +57,7 @@ class ResultPage extends React.Component {
             // longitud: this.props.location.state.data.longitud || {}
 
         }
-        if(typeof this.props.location.state !== 'undefined'){
+        if (typeof this.props.location.state !== 'undefined') {
             localStorage.setItem('filename', this.props.location.state.data.picture[0].name);
             localStorage.setItem('language', this.props.location.state.data.selectedOption.value);
             localStorage.setItem('image_rect', this.props.location.state.data.image_rect);
@@ -70,15 +76,16 @@ class ResultPage extends React.Component {
         this.longitud = localStorage.getItem('longitud')
         this.audio_check = localStorage.getItem('audio_check')
         //this.text = localStorage.getItem('text')
-    
 
-        
-        
+
+
+
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.crearMarcador = this.crearMarcador.bind(this)
+        this.removeItemFromArr = this.removeItemFromArr.bind(this)
         this.audio = null
-        // this.initMap = this.initMap.bind(this);
-        // this.crearMarcador = this.crearMarcador.bind(this);
+        this.places = ['cafe', 'park']
+
 
 
 
@@ -89,60 +96,69 @@ class ResultPage extends React.Component {
 
     componentDidMount() {
         //fetch('pruebaCeca.html').then(data => data.text()).then(html=> document.getElementById('elementID').innerHTML = html);
-        if(typeof this.props.location.state !== 'undefined'){
+        if (typeof this.props.location.state !== 'undefined') {
             if (this.landmark != undefined) {
                 fetch('/text/' + this.landmark + '/' + this.language).then(res => res.json()).then(data => {
                     this.setState({ text: data.text });
                     localStorage.setItem('text', data.text);
                     console.log(localStorage.getItem('text'));
-                   // this.text = this.state.text
-                   console.log(this.audio_check)
-                    if(this.audio_check === 'true'){
+                    // this.text = this.state.text
+                    console.log(this.audio_check)
+                    if (this.audio_check === 'true') {
                         console.log(this.audio_check)
                         fetch('/speech/' + this.state.text + '/' + this.language).then(res => res.json()).then(data => {
                             localStorage.setItem('audio', data.audio);
                             this.setState({ audio: data.audio });
-                            
+
                         });
                     }
-                    
+
                 });
-    
+
             }
-        }else{
-            this.setState({text: localStorage.getItem('text')});
-            this.setState({audio: localStorage.getItem('audio')});
+        } else {
+            this.setState({ text: localStorage.getItem('text') });
+            this.setState({ audio: localStorage.getItem('audio') });
 
         }
-        
+
 
 
     }
-  
+
     fetchPlaces(mapProps, map) {
         const { google } = mapProps;
         const service = new google.maps.places.PlacesService(map);
         var latLng = new google.maps.LatLng(this.latitud, this.longitud);
-        var request = {
-            location: latLng,
-            radius: 5000,
-            //openNow: true, si los queremos abiertos ahora
-            types: ['cafe', 'health']
-        };
-        service.nearbySearch(request, (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    //var place = results[i];
-                    this.crearMarcador(results[i], mapProps, map);
+        for (var i = 0; i < this.state.markers.length; i++) {
+            this.state.markers[i].setMap(null);
+        }
+        for (var i = 0; i < this.state.places.length; i++) {
+            var request = {
+                location: latLng,
+                radius: 5000,
+                //openNow: true, //si los queremos abiertos ahora
+                type: this.state.places[i]
+            };
+            console.log(this.state.places)
+            service.nearbySearch(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+                    for (var i = 0; i < results.length; i++) {
+                        this.crearMarcador(results[i], mapProps, map);
+                    }
                 }
-            }
 
 
-        });
+            });
+        }
+
+        this.setState({ mapProps: mapProps, map: map });
 
     }
     crearMarcador(place, mapProps, map) { //var image =dir 
         // Creamos un marcador
+
         const { google } = mapProps;
         var infowindow = new google.maps.InfoWindow();
         var marker = new google.maps.Marker({
@@ -153,12 +169,33 @@ class ResultPage extends React.Component {
 
             //icon:image para cambiar el icono
         });
+
+        let m = this.state.markers;
+        m.push(marker);
+        this.setState({ markers: m });
+
         google.maps.event.addListener(marker, 'click', function () {
             infowindow.setContent(place.name + JSON.stringify(place.plus_code) + "" + place.rating + " " + JSON.stringify(place.formatted_phone_number));
             //infowindow.setContent("hola");
             infowindow.open(map, this);
         });
 
+    }
+
+    handleCheckboxChange = selectedOption => {
+
+        let pl = this.state.places;
+        pl.push(this.places[0]);
+        this.setState({ places: pl })
+        console.log(this.state.places)
+
+    }
+    removeItemFromArr(arr, item) {
+        var i = arr.indexOf(item);
+
+        if (i !== -1) {
+            arr.splice(i, 1);
+        }
     }
 
 
@@ -170,7 +207,6 @@ class ResultPage extends React.Component {
 
         };
         if (this.image_rect !== 'undefined') {
-            console.log(this.image_rect)
             if (this.state.audio !== undefined) {
                 this.audio = <ReactAudioPlayer
                     src={require('./instance/audios/' + this.state.audio)}
@@ -179,6 +215,8 @@ class ResultPage extends React.Component {
                     currentTime
                 />
             }
+            console.log("hola")
+
 
             return (
 
@@ -197,20 +235,63 @@ class ResultPage extends React.Component {
                                 <Marker position={{ lat: this.latitud, lng: this.longitud }} icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"} />
 
                             </Map>
+
                         </Col>
                         <Col>
-                            {/* <MDBContainer>
-                                <div className="scrollbar scrollbar-primary  mt-5 mx-auto" style={{ width: "300px", maxHeight: "50px" }}>
-                                    <p>{this.state.text}</p>
-                                </div>
-
-                            </MDBContainer> */}
                             <Container className="scroll_text">
                                 {this.state.text}
                             </Container>
                             {this.audio}
+
+
+                            <form onSubmit={this.handleSubmit}>
+                                <input
+                                    name="isGoing"
+                                    type="checkbox"
+                                    onChange={() => {
+                                        let check = !this.state.checked0
+                                        let pl = this.state.places;
+                                        this.setState({ checked0: !this.state.checked0 })
+                                        if (check) {
+
+                                            pl.push(this.places[0]);
+
+
+
+                                        } else {
+                                            this.removeItemFromArr(pl, this.places[0])
+                                        }
+                                        this.fetchPlaces(this.state.mapProps, this.state.map)
+                                        this.setState({ places: pl })
+                                        console.log(this.state.places)
+                                    }
+                                    } /> Cafeteria
+                            <input
+                                    name="isGoing"
+                                    type="checkbox"
+                                    onChange={() => {
+                                        let check = !this.state.checked1
+                                        let pl = this.state.places;
+                                        this.setState({ checked1: !this.state.checked1 })
+                                        if (check) {
+
+                                            pl.push(this.places[1]);
+
+
+
+                                        } else {
+                                            this.removeItemFromArr(pl, this.places[1])
+                                        }
+                                        this.fetchPlaces(this.state.mapProps, this.state.map)
+                                        this.setState({ places: pl })
+                                        console.log(this.state.places)
+                                    }
+                                    } /> Parques
+      </form>
                         </Col>
                     </Row>
+
+
                 </Container>
 
             );
