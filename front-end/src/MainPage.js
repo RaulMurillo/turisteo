@@ -104,7 +104,7 @@ class MainPage extends React.Component {
 
             }).catch(error => {this.setState({butonAct: true}); console.log(this.state.butonAct)});
         }else{
-            this.setState({picture:undefined});
+            this.setState({picture:undefined, image_rect:undefined});
         }
 
     }
@@ -117,7 +117,7 @@ class MainPage extends React.Component {
         return (
             <Container>
                 <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
-                    Introduce una imágen y un idioma
+                    Select a language
                 </Alert>
                 <Row className="justify-content-md-center">
 

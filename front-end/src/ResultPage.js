@@ -207,7 +207,8 @@ class ResultPage extends React.Component {
 
         };
         if (this.image_rect !== 'undefined') {
-            if (this.state.audio !== undefined) {
+            if (this.state.audio !== undefined && this.state.audio !== null) {
+                console.log("hola")
                 this.audio = <ReactAudioPlayer
                     src={require('./instance/audios/' + this.state.audio)}
                     autoPlay
@@ -215,7 +216,7 @@ class ResultPage extends React.Component {
                     currentTime
                 />
             }
-            console.log("hola")
+
 
 
             return (
@@ -241,6 +242,7 @@ class ResultPage extends React.Component {
                             <Container className="scroll_text">
                                 {this.state.text}
                             </Container>
+    
                             {this.audio}
 
 
