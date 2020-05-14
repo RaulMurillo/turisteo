@@ -13,11 +13,14 @@
     margin-left: 10px;
 }
 .scroll_text{
-    height: 700px;
+    height: 500px;
     overflow-y: scroll;
     margin-bottom: 30px;
 }
 .image{
     margin-bottom: 20px;
+}
+.places{
+    margin-left: 20px;
 }
 
