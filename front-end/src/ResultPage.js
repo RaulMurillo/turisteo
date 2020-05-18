@@ -7,9 +7,8 @@ import Image from 'react-bootstrap/Image'
 import {
     withRouter
 } from 'react-router-dom'
-import { Map, GoogleApiWrapper, Marker, Listing, Text, View } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import ReactAudioPlayer from 'react-audio-player';
-import Form from 'react-bootstrap/Form'
 //import fs from 'fs'
 
 

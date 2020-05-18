@@ -7,6 +7,7 @@ import {
 
 import MainPage from './MainPage'
 
+
 function MainFunc() {
 
 	let history = useHistory();
