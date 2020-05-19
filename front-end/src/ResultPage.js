@@ -49,9 +49,9 @@ class ResultPage extends React.Component {
             mapProps: undefined,
             map: undefined,
             markers: [],
-            audio_loading: undefined,
-            near_place: undefined,
-            text_loading: undefined,
+            audio_loading: localStorage.getItem('audioLoading') || undefined,
+            near_place: localStorage.getItem('nearPlace') || undefined,
+            text_loading: localStorage.getItem('textLoading') || undefined,
             // filename: this.props.location.state.data.picture[0].name || {},
             // language: this.props.location.state.data.selectedOption || {},
             // image_rect: this.props.location.state.data.image_rect || {},
@@ -94,18 +94,9 @@ class ResultPage extends React.Component {
             'cafe', 'park', 'restaurant', 'shopping_mall', 'pharmacys',
             'gas_station', 'museum', 'parking', 'church', 'hospital',
             'atm', 'police', 'supermarket', 'zoo', 'tourist_attraction']
+        
 
-        fetch('/title/' + 'Nearby places' + '/' + this.language).then(res => res.json()).then(data => {
-            this.setState({ near_place: data.title })
-        });
 
-        fetch('/title/' + 'Loading audio...' + '/' + this.language).then(res => res.json()).then(data => {
-            this.setState({ audio_loading: data.title })
-        });
-
-        fetch('/title/' + 'Loading text...' + '/' + this.language).then(res => res.json()).then(data => {
-            this.setState({ text_loading: data.title })
-        });
 
 
 
@@ -119,6 +110,20 @@ class ResultPage extends React.Component {
         //fetch('pruebaCeca.html').then(data => data.text()).then(html=> document.getElementById('elementID').innerHTML = html);
         if (typeof this.props.location.state !== 'undefined') {
             if (this.landmark != undefined) {
+                fetch('/title/' + 'Nearby places' + '/' + this.language).then(res => res.json()).then(data => {
+                    this.setState({ near_place: data.title })
+                    localStorage.setItem('nearPlace', data.title);
+                });
+        
+                fetch('/title/' + 'Loading audio...' + '/' + this.language).then(res => res.json()).then(data => {
+                    this.setState({ audio_loading: data.title })
+                    localStorage.setItem('audioLoading', data.title);
+                });
+        
+                fetch('/title/' + 'Loading text...' + '/' + this.language).then(res => res.json()).then(data => {
+                    this.setState({ text_loading: data.title })
+                    localStorage.setItem('textLoading', data.title);
+                });
                 fetch('/text/' + this.landmark + '/' + this.language).then(res => res.json()).then(data => {
                     this.setState({ text: data.text });
                     localStorage.setItem('text', data.text);
@@ -131,11 +136,25 @@ class ResultPage extends React.Component {
                             localStorage.setItem('audio', data.audio);
                             this.setState({ audio: data.audio });
 
+                        }).catch(error => {
+                            fetch('/title/' + 'Error generating audio' + '/' + this.language).then(res => res.json()).then(data => {
+                                this.setState({ audio_loading: data.title });
+                                localStorage.setItem('audioLoading', data.title);
+                            });
                         });
                     }
 
+                }).catch(error => {
+                    fetch('/title/' + 'Error generating text' + '/' + this.language).then(res => res.json()).then(data => {
+                        this.setState({ text_loading: data.title });
+                        localStorage.setItem('textLoading', data.title);
+                    });
+                    fetch('/title/' + 'Error generating audio' + '/' + this.language).then(res => res.json()).then(data => {
+                        this.setState({ audio_loading: data.title });
+                        localStorage.setItem('audioLoading', data.title);
+                    });
                 });
-                
+
 
             }
         } else {
@@ -199,11 +218,11 @@ class ResultPage extends React.Component {
         google.maps.event.addListener(marker, 'click', function () {
             console.log(place)
             var stars = "";
-            for (var i =0 ; i < place.rating; i++){
-                 stars += "<img src=\"images/star.png\" width=\"15\" hight=\"15\"></img>"
+            for (var i = 0; i < place.rating; i++) {
+                stars += "<img src=\"images/star.png\" width=\"15\" hight=\"15\"></img>"
             }
             //stars = "<img src=\"images/star.png\" width=\"15\" hight=\"15\"></img>"
-            var html = "<b><strong>" + place.name + "</strong></b> <br/>" + place.vicinity+ "</b> <br/>" + stars;
+            var html = "<b><strong>" + place.name + "</strong></b> <br/>" + place.vicinity + "</b> <br/>" + stars;
             infowindow.setContent(html);
             //infowindow.setContent(place.name + JSON.stringify(place.plus_code) + "" + place.rating + " " + JSON.stringify(place.formatted_phone_number));
             //infowindow.setContent("hola");
@@ -267,10 +286,11 @@ class ResultPage extends React.Component {
 
 
             }
-            if(this.state.text === undefined){
-                this.text = this.state.text_loading;
-            }else{
+            if (this.state.text !== undefined) {
                 this.text = this.state.text;
+            } else {
+                this.text = this.state.text_loading;
+    
             }
 
 
@@ -310,8 +330,8 @@ class ResultPage extends React.Component {
                                 {this.text}
                             </Container>
 
-                            
-                            <p className="places">{this.state.near_place}</p>
+
+                            <h6 className="places">{this.state.near_place}</h6>
                             <Container className="places">
                                 <Row >
                                     <input
@@ -491,9 +511,16 @@ class ResultPage extends React.Component {
         } else {
             return (
 
-                <Container>
-                    <h1>Error</h1>
-                    <p>No se ha podido detectar la imagen</p>
+                <Container style={{ width: '900px', hight: '900px' }}>
+                    <Row className="error">
+                        <h1 ><font size='50'>Error :(</font></h1>
+
+                    </Row>
+                    <Row >
+                        <p><font size='5'>The image could not be detected.</font></p>
+
+                    </Row>
+
                 </Container>
             );
         }

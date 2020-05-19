@@ -74,13 +74,12 @@ class App extends React.Component {
 				
 				
 				<Switch>
-				
 					
 					<Route exact path="/">
-						<IntroductionPage />
-					</Route>
-					<Route path="/mainpage">
 						<MainFunc />
+					</Route>
+					<Route push path="/mainpage">
+						<MainPage />
 					</Route>
 					<Route path="/resultpage">
 						<ResultPage />

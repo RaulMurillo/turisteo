@@ -13,9 +13,6 @@ class Prueba extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            redirect: false,
-        }
         this.handleButton = this.handleButton.bind(this);
 
 
@@ -23,14 +20,12 @@ class Prueba extends React.Component {
 
     handleButton = selectedOption => {
 
-        this.setState({ redirect: true });
-        // console.log(this.props)
-        // this.props.history.push({
-        //     pathname: '/mainpage', 'state': {
-        //         'from': { 'pathname': this.props.from.pathname },
+        this.props.history.push({
+            pathname: '/mainpage', 'state': {
+                'from': { 'pathname': this.props.from.pathname },
 
-        //     }
-        // });
+            }
+        });
         
 
     };
@@ -38,9 +33,7 @@ class Prueba extends React.Component {
 
 
     render() {
-        if (this.state.redirect) {
-            return <Redirect to='/mainpage' />
-        } else {
+
             return (
 
                 <Container style={{ width: '900px' }}>
@@ -66,6 +59,6 @@ class Prueba extends React.Component {
         }
         
         
-    }
+    
 }
     export default Prueba;

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import MainPage from './MainPage'
-
+import IntroductionPage from './IntroductionPage'
 
 function MainFunc() {
 
@@ -17,7 +17,7 @@ function MainFunc() {
 
 	return (
 		
-		<MainPage from={from} history={history} />
+		<IntroductionPage from={from} history={history} />
 						
 	);
 }

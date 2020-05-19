@@ -102,7 +102,7 @@ class MainPage extends React.Component {
             }).then(res => res.json()).then(data => {
                 this.setState({ image_rect: data.image_rect, landmark: data.landmark, latitud: data.latitud, longitud: data.longitud });
 
-            }).catch(error => {this.setState({butonAct: true}); console.log(this.state.butonAct)});
+            }).catch(error => {this.setState({butonAct: true})});
         }else{
             this.setState({picture:undefined, image_rect:undefined});
         }
