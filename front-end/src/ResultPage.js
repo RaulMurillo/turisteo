@@ -94,7 +94,7 @@ class ResultPage extends React.Component {
             'cafe', 'park', 'restaurant', 'shopping_mall', 'pharmacys',
             'gas_station', 'museum', 'parking', 'church', 'hospital',
             'atm', 'police', 'supermarket', 'zoo', 'tourist_attraction']
-        
+
 
 
 
@@ -114,12 +114,12 @@ class ResultPage extends React.Component {
                     this.setState({ near_place: data.title })
                     localStorage.setItem('nearPlace', data.title);
                 });
-        
+
                 fetch('/title/' + 'Loading audio...' + '/' + this.language).then(res => res.json()).then(data => {
                     this.setState({ audio_loading: data.title })
                     localStorage.setItem('audioLoading', data.title);
                 });
-        
+
                 fetch('/title/' + 'Loading text...' + '/' + this.language).then(res => res.json()).then(data => {
                     this.setState({ text_loading: data.title })
                     localStorage.setItem('textLoading', data.title);
@@ -186,7 +186,7 @@ class ResultPage extends React.Component {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
 
                     for (var i = 0; i < results.length; i++) {
-                        this.crearMarcador(results[i], mapProps, map);
+                        this.crearMarcador(results[i], mapProps, map, latLng);
                     }
                 }
 
@@ -197,7 +197,7 @@ class ResultPage extends React.Component {
         this.setState({ mapProps: mapProps, map: map });
 
     }
-    crearMarcador(place, mapProps, map) { //var image =dir 
+    crearMarcador(place, mapProps, map, latLng) { //var image =dir 
         // Creamos un marcador
 
         const { google } = mapProps;
@@ -216,16 +216,87 @@ class ResultPage extends React.Component {
         this.setState({ markers: m });
 
         google.maps.event.addListener(marker, 'click', function () {
-            console.log(place)
             var stars = "";
             for (var i = 0; i < place.rating; i++) {
                 stars += "<img src=\"images/star.png\" width=\"15\" hight=\"15\"></img>"
             }
-            //stars = "<img src=\"images/star.png\" width=\"15\" hight=\"15\"></img>"
-            var html = "<b><strong>" + place.name + "</strong></b> <br/>" + place.vicinity + "</b> <br/>" + stars;
+            const service = new google.maps.DistanceMatrixService();
+            const matrixOptions_driving = {
+                origins: [latLng.lat() + ', ' + latLng.lng()], // technician locations
+                destinations: [place.geometry.location.lat() + ', ' + place.geometry.location.lng()], // customer address
+                travelMode: 'DRIVING',
+                unitSystem: google.maps.UnitSystem.IMPERIAL
+            };
+            // Call Distance Matrix service
+            service.getDistanceMatrix(matrixOptions_driving, (response, status) => {
+                if (status !== "OK") {
+                    alert("Error with distance matrix");
+                    return;
+                }
+                let time_driving = response.rows[0].elements[0].duration.text;
+                let car = "<img src=\"images/coche.png\" width=\"40\" hight=\"40\"></img>"
+                html += "</b> <br/>" + car + "  " + "</b>" + time_driving + "<br/>" ;
+                infowindow.setContent(html);
+            
+
+
+            });
+            const matrixOptions_walk = {
+                origins: [latLng.lat() + ', ' + latLng.lng()], // technician locations
+                destinations: [place.geometry.location.lat() + ', ' + place.geometry.location.lng()], // customer address
+                travelMode: 'WALKING',
+                unitSystem: google.maps.UnitSystem.IMPERIAL
+            };
+            service.getDistanceMatrix(matrixOptions_walk, (response, status) => {
+                if (status !== "OK") {
+                    alert("Error with distance matrix");
+                    return;
+                }
+                let time_walking = response.rows[0].elements[0].duration.text;
+                let walk = "<img src=\"images/andar.png\" width=\"40\" hight=\"40\"></img>"
+                html += "</b> <br/>" + walk + "  " +"</b>" + time_walking + "<br/>" ;
+                infowindow.setContent(html);
+            
+
+
+            });
+            const matrixOptions_Transit = {
+                origins: [latLng.lat() + ', ' + latLng.lng()], // technician locations
+                destinations: [place.geometry.location.lat() + ', ' + place.geometry.location.lng()], // customer address
+                travelMode: 'TRANSIT',
+                unitSystem: google.maps.UnitSystem.IMPERIAL
+            };
+            service.getDistanceMatrix(matrixOptions_Transit, (response, status) => {
+                if (status !== "OK") {
+                    alert("Error with distance matrix");
+                    return;
+                }
+                let time_transit = response.rows[0].elements[0].duration.text;
+                let transit = "<img src=\"images/transporte.png\" width=\"40\" hight=\"40\"></img>"
+                html += "</b> <br/>" + transit + "  " +"</b>" + time_transit + "<br/>" ;
+                infowindow.setContent(html);
+            
+
+
+            });
+
+
+            // // Callback function used to process Distance Matrix response
+            // function callback(response, status) {
+            //     console.log(status);
+            //     if (status !== "OK") {
+            //         alert("Error with distance matrix");
+            //         return;
+            //     }
+            //     time_driving = response.rows[0].elements[0].duration.text;
+            //     console.log(time_driving)
+            
+            // }
+            var html = "<b><strong>" + place.name + "</strong></b> <br/>" + place.vicinity + "</b> <br/>" + stars + "<br/>"  ;
             infowindow.setContent(html);
-            //infowindow.setContent(place.name + JSON.stringify(place.plus_code) + "" + place.rating + " " + JSON.stringify(place.formatted_phone_number));
-            //infowindow.setContent("hola");
+
+
+            
             infowindow.open(map, this);
         });
 
@@ -290,7 +361,7 @@ class ResultPage extends React.Component {
                 this.text = this.state.text;
             } else {
                 this.text = this.state.text_loading;
-    
+
             }
 
 
