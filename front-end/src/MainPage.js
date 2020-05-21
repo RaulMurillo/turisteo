@@ -20,7 +20,7 @@ class MainPage extends React.Component {
 
     constructor(props) {
         super(props);
-  
+
 
         this.state = {
             picture: null,
@@ -32,7 +32,6 @@ class MainPage extends React.Component {
             landmark: undefined,
             latitud: undefined,
             longitud: undefined,
-            audio: undefined,
             butonAct: false
         };
         localStorage.removeItem('text')
@@ -58,9 +57,9 @@ class MainPage extends React.Component {
             audio
         } = this.refs
         // this.state.audio = audio.checked;
-        this.setState({audio: audio.checked});
-        if (this.state.picture != null && this.state.selectedOption != null) {
-            if (this.state.landmark != undefined) {
+        this.setState({ audio: audio.checked });
+        if (this.state.picture !== null && this.state.selectedOption !== null) {
+            if (this.state.landmark !== undefined) {
                 fetch('/title/' + this.state.landmark + '/' + this.state.selectedOption.value).then(res => res.json()).then(data => {
                     this.setState({ title: data.title });
                     this.props.history.push({
@@ -71,7 +70,7 @@ class MainPage extends React.Component {
                         }
                     });
                 });
-            }else{
+            } else {
                 this.props.history.push({
                     pathname: '/resultpage', 'state': {
                         'from': { 'pathname': this.props.location.pathname },
@@ -92,7 +91,7 @@ class MainPage extends React.Component {
 
 
     onDrop(picture) {
-        if (picture.length != 0) {
+        if (picture.length !== 0) {
             this.setState({ picture });
             const data = new FormData();
             data.append('file', picture[0]);
@@ -102,9 +101,9 @@ class MainPage extends React.Component {
             }).then(res => res.json()).then(data => {
                 this.setState({ image_rect: data.image_rect, landmark: data.landmark, latitud: data.latitud, longitud: data.longitud });
 
-            }).catch(error => {this.setState({butonAct: true})});
-        }else{
-            this.setState({picture:undefined, image_rect:undefined});
+            }).catch(error => { this.setState({ butonAct: true }) });
+        } else {
+            this.setState({ picture: undefined, image_rect: undefined });
         }
 
     }
@@ -115,59 +114,66 @@ class MainPage extends React.Component {
 
     render() {
         return (
-            <Container>
-                <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
-                    Select a language
+            <Row>
+                <Col xs='3' className="side_col_l"></Col>
+                <Col xs='6'>
+                    <Container>
+                        <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
+                            Select a language
                 </Alert>
-                <Row className="justify-content-md-center">
+                        <Row className="justify-content-md-center">
 
-                    <Col md="auto">
-                        <Image className="logo" src="images/logo_turisteo.png" roundedCircle />
-                    </Col>
+                            <Col md="auto">
+                                <Image className="logo" src="images/full_turisteo.png" />
+                            </Col>
 
-                </Row>
-                <Row>
-                    <ImageUploader
-                        withIcon={true}
-                        singleImage={true}
-                        withPreview={true}
-                        buttonText='Upload image'
-                        onChange={this.onDrop}
-                        label="max size 20MB"
-                        withIcon={true}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                        maxFileSize={20971520}
-                    />
-                </Row>
-                <Row className="justify-content-md-center" xs lg="6">
+                        </Row>
+                        <Row>
+                            <ImageUploader
+                                withIcon={true}
+                                singleImage={true}
+                                withPreview={true}
+                                buttonText='Upload image'
+                                onChange={this.onDrop}
+                                label="max size 20MB"
+                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                maxFileSize={20971520}
+                            />
+                        </Row>
+                        <Row className="row_language">
 
-                    <Col>
-                        <Select className="lang"
+                            <Col xs='6'>
+                                <Select className="lang"
 
-                            value={this.selectedOption}
-                            onChange={this.handleChange}
-                            options={options}
-                            placeholder="Select language"
-                        />
-
-
-                    </Col>
-                    <Col>
-                        <Form.Group controlId="formBasicCheckbox" >
-                            <Form.Check type="checkbox" className="audio" ref="audio" label="Audio" />
-
-                        </Form.Group>
-                    </Col>
-
-                </Row>
-                <Row className="justify-content-md-center" xs lg="6">
-
-                    <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
-
-                </Row>
+                                    value={this.selectedOption}
+                                    onChange={this.handleChange}
+                                    options={options}
+                                    placeholder="Select language"
+                                />
 
 
-            </Container>
+                            </Col>
+                            <Col xs='6'>
+                                <Form.Group controlId="formBasicCheckbox" >
+                                    <Form.Check type="checkbox" className="audio" ref="audio" label="Audio" />
+
+                                </Form.Group>
+                            </Col>
+
+                        </Row>
+                        <Row className="justify-content-md-center" xs lg="6">
+
+                            <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
+
+                        </Row>
+
+
+                    </Container>
+
+                </Col>
+                <Col xs='3' className="side_col_r"></Col>
+            </Row>
+
 
         );
     }

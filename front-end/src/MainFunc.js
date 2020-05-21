@@ -5,7 +5,6 @@ import {
 	withRouter
 } from 'react-router-dom'
 
-import MainPage from './MainPage'
 import IntroductionPage from './IntroductionPage'
 
 function MainFunc() {

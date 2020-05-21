@@ -1,10 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Container, Row, Button } from 'reactstrap'
+import { Container, Row, Button, Col } from 'reactstrap'
 import Image from 'react-bootstrap/Image'
-import {
-	Redirect
-} from "react-router-dom"
+
 
 
 
@@ -26,7 +23,7 @@ class Prueba extends React.Component {
 
             }
         });
-        
+
 
     };
 
@@ -34,31 +31,37 @@ class Prueba extends React.Component {
 
     render() {
 
-            return (
+        return (
+            <Row>
 
-                <Container style={{ width: '900px' }}>
-                    <Row className="img_logo">
-                        <Image className="image_logo" src="images/full_turisteo.png" rounded />
-                    </Row>
-                    <div>
-                        <p style={{ textAlign: "center" }}>
-                            Turisteo is a proyect for the subject "Tecnologías Multimedia e Interacción" (TMI) from Master in Computer Engineering at Complutense University of Madrid, course 2019-2020.
+                <Col xs='3' className="side_col_l"></Col>
+                <Col xs='6'>
+                    <Container>
+                        <Row className="img_logo">
+                            <Image className="image_logo" src="images/full_turisteo.png" width="100%" height="auto" rounded />
+                        </Row>
+                        <div>
+                            <p className="introduction_text" style={{ textAlign: "center" }}>
+                                Turisteo is a proyect for the subject "Tecnologías Multimedia e Interacción" (TMI) from Master in Computer Engineering at Complutense University of Madrid, course 2019-2020.
 					</p>
-                        <p style={{ textAlign: "center" }}>
-                            It consists of an App capable of recognizing artistic and cultural monuments and generating information of tourist interest in this regard.
+                            <p className="introduction_text" style={{ textAlign: "center" }}>
+                                It consists of an App capable of recognizing artistic and cultural monuments and generating information of tourist interest in this regard.
 					</p>
-                    </div>
-                    <Row className="justify-content-md-center" xs lg="6">
+                        </div>
+                        <Row className="justify-content-md-center" xs lg="6">
 
-                        <Button onClick={this.handleButton}>Start</Button>
+                            <Button onClick={this.handleButton}>Start</Button>
 
-                    </Row>
+                        </Row>
+                    </Container>
+                </Col>
+                <Col xs='3' className="side_col_r"></Col>
 
-                </Container>
-            )
-        }
-        
-        
-    
+            </Row>
+        )
+    }
+
+
+
 }
-    export default Prueba;
+export default Prueba;
