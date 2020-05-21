@@ -353,7 +353,7 @@ class ResultPage extends React.Component {
                     <Col xs='0' sm='0' md='2' className="side_col_l"></Col>
                     <Col xs='12' sm='12' md='8'>
                         <Container>
-                            <h1><font size='50'><strong>{this.title}</strong></font></h1>
+                            <h1><font size='50'>{this.title}</font></h1>
                             <Row>
                                 <Col>
                                     <Row>
@@ -385,7 +385,7 @@ class ResultPage extends React.Component {
                                     </Container>
 
 
-                                    <h4 className="places"><strong>{this.state.near_place}</strong></h4>
+                                    <h4 className="places">{this.state.near_place}</h4>
                                     <Container className="places">
                                         <Row >
                                             <Image className="image" src={"images/"+this.state.near_places[0] +'.png'} id="0" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />

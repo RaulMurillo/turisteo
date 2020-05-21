@@ -30,7 +30,7 @@
     margin-left: 20px;
 }
 .img_logo{
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 30px;
 }
 .error{
@@ -46,11 +46,12 @@
     background-image: url(images/col_r.png);
 }
 .row_language{
-    margin-left: 100px;
+    margin-top: 10px;
+    margin-bottom: 200px;
 }
 @font-face {
     font-family: myFirstFont;
-    src: url(fonts/LifestyleRegular-gxEPp.ttf);
+    src: url(fonts/Stabillo-Medium.ttf);
   }
 
 h1 {

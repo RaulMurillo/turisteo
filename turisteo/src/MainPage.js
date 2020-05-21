@@ -11,8 +11,8 @@ import {
 } from 'react-router-dom'
 
 const options = [
-    { value: 'de', label: 'German' }, { value: 'en', label: 'English' }, { value: 'es', label: 'Spanish' },
-    { value: 'fr', label: 'French' }, { value: 'it', label: 'Italian' }, { value: 'pt', label: 'Portuguese' }
+    { value: 'de', label: <div><img src={"images/german.png"} height="30px" width="30px"/>German</div> }, { value: 'en', label: <div><img src={"images/english.png"} height="30px" width="30px"/>English</div> }, { value: 'es', label: <div><img src={"images/spanish.png"} height="30px" width="30px"/>Spanish</div> },
+    { value: 'fr', label: <div><img src={"images/french.png"} height="30px" width="30px"/>French</div> }, { value: 'it', label: <div><img src={"images/italian.png"} height="30px" width="30px"/>Italian</div> }, { value: 'pt', label: <div><img src={"images/portuguese.png"} height="30px" width="30px"/>Portuguese</div> }
 
 ];
 
@@ -118,16 +118,16 @@ class MainPage extends React.Component {
                 <Col xs='0' sm='0' md='3' className="side_col_l"></Col>
                 <Col xs='12' sm='12' md='6'>
                     <Container>
-                        <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
-                            Select a language
-                </Alert>
-                        <Row className="justify-content-md-center">
 
-                            <Col md="auto">
-                                <Image className="logo" src="images/full_turisteo.png" />
-                            </Col>
+                    
 
+                        <Row className="img_logo">
+                            <Image className="image_logo" src="images/full_turisteo.png" width="100%" height="auto" rounded />
                         </Row>
+
+                        <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
+                                Please, select a language
+                            </Alert>
                         <Row>
                             <ImageUploader
                                 withIcon={true}
@@ -135,37 +135,39 @@ class MainPage extends React.Component {
                                 withPreview={true}
                                 buttonText='Upload image'
                                 onChange={this.onDrop}
-                                label="max size 20MB"
-                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                label= {<div><p><b>Max. size 20MB</b> [.jpg, .jpeg, .png]</p></div>}
+                                
+                                imgExtension={['.jpeg', '.jpg', '.png']}
                                 maxFileSize={20971520}
                             />
                         </Row>
+                        <Row>
+
+                            <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" block onClick={this.handleButton}>Submit</Button>
+                        
+                        </Row>
+
                         <Row className="row_language">
 
-                            <Col xs='6'>
+                            <Col lg={{ offset: 3 }} md={{ offset: 1 }} sm={{ offset: 4 }} xs={{ offset: 4 }}>
                                 <Select className="lang"
 
                                     value={this.selectedOption}
                                     onChange={this.handleChange}
                                     options={options}
-                                    placeholder="Select language"
+                                    placeholder="Language"
                                 />
 
 
                             </Col>
-                            <Col xs='6'>
+                            <Col lg ={{ offset: 1 }} md={{ offset: 2 }} sm={{ offset: 5 }} xs={{ offset: 5 }}>
                                 <Form.Group controlId="formBasicCheckbox" >
                                     <Form.Check type="checkbox" className="audio" ref="audio" label="Audio" />
-
                                 </Form.Group>
                             </Col>
 
                         </Row>
-                        <Row className="justify-content-md-center" xs lg="6">
 
-                            <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" size="lg" block onClick={this.handleButton}>Submit</Button>
-
-                        </Row>
 
 
                     </Container>
