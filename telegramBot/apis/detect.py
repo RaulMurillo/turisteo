@@ -60,7 +60,7 @@ def detect_landmarks(path):
     if len(landmarks) == 0:
         logging.warning('No landmark detected on picture.')
         # return None
-        raise Exception('No landmark detected on picture.')
+        raise AttributeError('No landmark detected on picture.')
 
     # logging.debug('Landmarks:')
     # for landmark in landmarks:

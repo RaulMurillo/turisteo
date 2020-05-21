@@ -65,16 +65,15 @@ def start(update, context):
     context.user_data[START_OVER] = True
     return select_lang(update, context)
 
-# TODO
 
-
-def help(update, context):
+def info(update, context):
     """Show software user manual in GUI"""
 
-    text = 'Información actualmente no disponible :('
-    update.message.reply_text(text=text)
-    # update.message.reply_text(texts.INFO[context.user_data[LANG]])
+    # text = 'Información actualmente no disponible :('
+    context.bot.send_message(chat_id=update.effective_chat.id, text=texts.INFO[context.user_data[LANG]], parse_mode=ParseMode.HTML)
+    # update.message.reply_text(texts.INFO[context.user_data[LANG]], parse_mode=ParseMode.HTML)
     # return SELECTING_ACTION
+    return
 
 
 def done(update, context):
@@ -106,7 +105,7 @@ def select_lang(update, context):
     button_list = [
         InlineKeyboardButton('{} {}'.format(texts.LANGUAGE[l]['name'], util.flag(texts.LANGUAGE[l]['flag'])), callback_data=l) for l in texts.LANGUAGE
     ]
-    langs_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=4))
+    langs_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=3))
 
     update.message.reply_text(
         text='Choose your language / Elige tu idioma / Choisissez votre langue',
@@ -141,7 +140,7 @@ def select_audio(update, context):
         InlineKeyboardButton('{} {}'.format(
             texts.YES_NO[context.user_data[LANG]]['no'], u'\U0001F507'), callback_data='no'),
     ]
-    langs_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=4))
+    langs_markup = InlineKeyboardMarkup(util.build_menu(button_list, n_cols=2))
 
     query.bot.send_message(
         chat_id=query.message.chat_id,
@@ -209,7 +208,7 @@ def display_name(update, context):
     update.message.reply_text(
         text='<b><u>' + landmark + '</u></b>', parse_mode=ParseMode.HTML)
     
-    sleep(1)
+    # sleep(1)
     # Display landmark location
     update.message.reply_location(
         latitude=context.user_data[LAT], longitude=context.user_data[LNG])
@@ -228,6 +227,12 @@ def display_image(update, context, landmarks):
     update.message.reply_photo(photo=open(rect_image_path, 'rb'))
     logger.info(f'[RECT IMG] {rect_image_path}')
 
+@util.send_action(ChatAction.TYPING)
+def my_translate(update, context, text, lang):
+    tr = translate(text, source_language='en', dest_language=lang)
+
+    return [t for t in tr if not(t == '\n' or len(t) < 50)]
+
 @run_async
 @util.send_action(ChatAction.TYPING)
 def display_text(update, context, trans_text):
@@ -235,7 +240,7 @@ def display_text(update, context, trans_text):
         sleep(0.75)
         update.message.reply_text(t)
 
-    return
+    return 0
 
 @run_async
 def generate_audio(update, context, trans_text):
@@ -271,7 +276,10 @@ def display_info(update, context):
         ######
 
         # Get URL
-        url = google_fast_search(query=context.user_data[LANDMARK])
+        try:
+            url = google_fast_search(query=context.user_data[LANDMARK])
+        except:
+            url = google_search(query=context.user_data[LANDMARK], num_res=1)[0]
         logger.info(f'[URL] {url}')
 
         ######
@@ -286,8 +294,10 @@ def display_info(update, context):
             info_text = get_text_maxChars(url, maxChars=5000)
         # logger.info('[INFO TEXT SCRAPPED]')
         # Translate text
-        trans_text = translate(
-            info_text, source_language='en', dest_language=lang)
+        sleep(0.2)
+        trans_text = my_translate(update, context, info_text, lang)
+        # print(trans_text)
+        # translate(info_text, source_language='en', dest_language=lang)
         # logger.info('[TRADUCCION DONE]')
 
         ######
@@ -307,11 +317,12 @@ def display_info(update, context):
             ######
         else:
             text_promise.result()
+    except AttributeError:
+        update.message.reply_text(
+            text=texts.NO_LANDMARK[context.user_data[LANG]] + u' \U0001F625')
     except:
         update.message.reply_text(
-            text=texts.NO_LANDMARK[context.user_data[LANG]] + u' \U0001F625',
-            # parse_mode=ParseMode.HTML,
-        )
+            text=texts.NO_INFO[context.user_data[LANG]] + u' \U0001F625')
 
         # ######
         # p_name.join()
@@ -360,7 +371,7 @@ def telegramBot_main(token, photo_dir):
         },
         fallbacks=[
             CommandHandler('settings', select_lang),
-            CommandHandler('help', help),
+            CommandHandler('help', info),
             CommandHandler('exit', done),
         ]
     )
