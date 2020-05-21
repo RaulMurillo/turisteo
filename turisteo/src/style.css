@@ -1,0 +1,71 @@
+.logo{
+    margin-top: 40px;
+    text-align: center;
+}
+.lang{
+    width:180px;
+}
+.myrow{
+    text-align: center;
+}
+.audio{
+    margin-top: 8px;
+
+}
+.scroll_text{
+    height: 500px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+.image{
+    margin-bottom: 20px;
+}
+.image_logo{
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.places{
+    margin-left: 20px;
+}
+.img_logo{
+    margin-top: 100px;
+    margin-bottom: 30px;
+}
+.error{
+    margin-top: 150px;
+    margin-bottom: 10px;
+}
+.side_col_l{
+    background-color: rgb(0, 162, 255);
+    background-image: url(images/col_l.png);
+}
+.side_col_r{
+    background-color: rgb(0, 162, 255);
+    background-image: url(images/col_r.png);
+}
+.row_language{
+    margin-left: 100px;
+}
+@font-face {
+    font-family: myFirstFont;
+    src: url(fonts/LifestyleRegular-gxEPp.ttf);
+  }
+
+h1 {
+    font-family: myFirstFont;
+}
+h4{
+    font-family: myFirstFont;
+}
+.introduction_text{
+    font-family: introduction_font;
+}
+
+@font-face {
+    font-family: introduction_font;
+    src: url(fonts/CaviarDreams.ttf);
+  }
+
+

@@ -1,0 +1,82 @@
+{
+  "name": "turisteo",
+  "version": "0.2.0",
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/runtime": "^7.7.4",
+    "@types/google-maps": "^3.2.2",
+    "@types/googlemaps": "^3.39.3",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.7",
+    "browserify": "^16.5.0",
+    "browserify-css": "^0.15.0"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.9.14",
+    "animate.css": "^3.7.2",
+    "bootstrap": "^4.3.1",
+    "google-map-react": "^1.1.7",
+    "google-maps-react": "^2.0.6",
+    "mdbreact": "^4.26.0",
+    "react": "^16.11.0",
+    "react-audio-player": "^0.13.0",
+    "react-bootstrap": "^1.0.0",
+    "react-bootstrap-validation": "^0.1.11",
+    "react-dom": "^16.11.0",
+    "react-google-maps": "^9.4.5",
+    "react-html-parser": "^2.0.2",
+    "react-icons": "^3.8.0",
+    "react-images-upload": "^1.2.8",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.2.0",
+    "react-scroll-text": "^1.0.1",
+    "react-select": "^3.0.8",
+    "react-time-picker": "^3.8.0",
+    "reactstrap": "^8.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start-api": "cd ../back-end && flask run --no-debugger",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react"
+          ],
+          "plugins": [
+            "@babel/plugin-proposal-class-properties"
+          ]
+        }
+      ]
+    ]
+  },
+  "browserify-css": {
+    "autoInject": true,
+    "minify": true,
+    "rootDir": "dist"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:5000"
+}
