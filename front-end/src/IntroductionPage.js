@@ -34,8 +34,8 @@ class Prueba extends React.Component {
         return (
             <Row>
 
-                <Col xs='3' className="side_col_l"></Col>
-                <Col xs='6'>
+                <Col xs='0' sm='0' md='3' className="side_col_l"></Col>
+                <Col xs='12' sm='12' md='6'>
                     <Container>
                         <Row className="img_logo">
                             <Image className="image_logo" src="images/full_turisteo.png" width="100%" height="auto" rounded />
@@ -48,14 +48,16 @@ class Prueba extends React.Component {
                                 It consists of an App capable of recognizing artistic and cultural monuments and generating information of tourist interest in this regard.
 					</p>
                         </div>
-                        <Row className="justify-content-md-center" xs lg="6">
+                        <Row>
+                            <Col sm={{ size: 'auto', offset: 5 }} xs={{ size: 'auto', offset: 5 }}>
+                                <Button onClick={this.handleButton}>Start</Button>
+                            </Col>
 
-                            <Button onClick={this.handleButton}>Start</Button>
 
                         </Row>
                     </Container>
                 </Col>
-                <Col xs='3' className="side_col_r"></Col>
+                <Col xs='0' sm='0' md='3' className="side_col_r"></Col>
 
             </Row>
         )

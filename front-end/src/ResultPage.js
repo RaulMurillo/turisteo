@@ -51,7 +51,7 @@ class ResultPage extends React.Component {
             audio_loading: localStorage.getItem('audioLoading') || undefined,
             near_place: localStorage.getItem('nearPlace') || undefined,
             text_loading: localStorage.getItem('textLoading') || undefined,
-            near_places_bw: ["metro_bw", "estacionTren_bw", "aeropuerto_bw", "bus_bw", "tranvia_bw",
+            near_places: ["metro_bw", "estacionTren_bw", "aeropuerto_bw", "bus_bw", "tranvia_bw",
                             "cafeteria_bw", "parque_bw", "restaurante_bw", "centroComercial_bw", "farmacia_bw",
                             "gasolinera_bw", "museo_bw", "parking_bw", "iglesia_bw", "hospital_bw",
                             "cajero_bw", "policia_bw", "supermercado_bw", "zoo_bw", "atraccionTuristica_bw"]
@@ -126,7 +126,7 @@ class ResultPage extends React.Component {
                             this.setState({ audio: data.audio });
 
                         }).catch(error => {
-                            fetch('/title/' + 'Error generating audio' + '/' + this.language).then(res => res.json()).then(data => {
+                            fetch('/title/' + 'Audio generating error' + '/' + this.language).then(res => res.json()).then(data => {
                                 this.setState({ audio_loading: data.title });
                                 localStorage.setItem('audioLoading', data.title);
                             });
@@ -134,11 +134,11 @@ class ResultPage extends React.Component {
                     }
 
                 }).catch(error => {
-                    fetch('/title/' + 'Error generating text' + '/' + this.language).then(res => res.json()).then(data => {
+                    fetch('/title/' + 'Text generating error' + '/' + this.language).then(res => res.json()).then(data => {
                         this.setState({ text_loading: data.title });
                         localStorage.setItem('textLoading', data.title);
                     });
-                    fetch('/title/' + 'Error generating audio' + '/' + this.language).then(res => res.json()).then(data => {
+                    fetch('/title/' + 'Audio generating error' + '/' + this.language).then(res => res.json()).then(data => {
                         this.setState({ audio_loading: data.title });
                         localStorage.setItem('audioLoading', data.title);
                     });
@@ -297,23 +297,23 @@ class ResultPage extends React.Component {
         let pos = event.target.id;
         let check = this.state.checked
         let pl = this.state.places;
-        let near_places = this.state.near_places_bw;
+        let near_places = this.state.near_places;
         check[pos] = !check[pos];
         this.setState({ checked: check })
         if (check[pos]) {
 
             pl.push(this.places[pos]);
-            let image = this.state.near_places_bw[pos];
+            let image = this.state.near_places[pos];
             var res = image.split("_", 2);
             near_places[pos] = res[0];
 
         } else {
             this.removeItemFromArr(pl, this.places[pos])
-            let image = this.state.near_places_bw[pos];
+            let image = this.state.near_places[pos];
             near_places[pos] = image +'_bw';
         }
         this.fetchPlaces(this.state.mapProps, this.state.map)
-        this.setState({ places: pl, near_places_bw: near_places})
+        this.setState({ places: pl, near_places: near_places})
         console.log(this.state.places)
     }
 
@@ -350,12 +350,12 @@ class ResultPage extends React.Component {
 
             return (
                 <Row>
-                    <Col xs='2' className="side_col_l"></Col>
-                    <Col xs='8'>
+                    <Col xs='0' sm='0' md='2' className="side_col_l"></Col>
+                    <Col xs='12' sm='12' md='8'>
                         <Container>
                             <h1><font size='50'><strong>{this.title}</strong></font></h1>
                             <Row>
-                                <Col xs='6'>
+                                <Col>
                                     <Row>
                                         <Image className="image" src={require('./instance/images/' + this.image_rect)} style={{ width: '100%', height: 350 }} rounded />
                                     </Row>
@@ -379,7 +379,7 @@ class ResultPage extends React.Component {
 
 
                                 </Col>
-                                <Col xs='6'>
+                                <Col>
                                     <Container className="scroll_text">
                                         <p className="introduction_text">{this.text}</p>
                                     </Container>
@@ -388,32 +388,32 @@ class ResultPage extends React.Component {
                                     <h4 className="places"><strong>{this.state.near_place}</strong></h4>
                                     <Container className="places">
                                         <Row >
-                                            <Image className="image" src={"images/"+this.state.near_places_bw[0] +'.png'} id="0" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[1] +'.png'} id="1" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[2] +'.png'} id="2" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[3] +'.png'} id="3" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[4] +'.png'} id="4" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="image" src={"images/"+this.state.near_places[0] +'.png'} id="0" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[1] +'.png'} id="1" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[2] +'.png'} id="2" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[3] +'.png'} id="3" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[4] +'.png'} id="4" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
                                         </Row>
                                         <Row>
-                                            <Image className="image" src={"images/"+this.state.near_places_bw[5] +'.png'} id="5" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[6] +'.png'} id="6" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[7] +'.png'} id="7" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[8] +'.png'} id="8" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[9] +'.png'} id="9" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="image" src={"images/"+this.state.near_places[5] +'.png'} id="5" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[6] +'.png'} id="6" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[7] +'.png'} id="7" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[8] +'.png'} id="8" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[9] +'.png'} id="9" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
                                         </Row>
                                         <Row>
-                                            <Image className="image" src={"images/"+this.state.near_places_bw[10] +'.png'} id="10" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[11] +'.png'} id="11" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[12] +'.png'} id="12" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[13] +'.png'} id="13" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[14] +'.png'} id="14" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="image" src={"images/"+this.state.near_places[10] +'.png'} id="10" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[11] +'.png'} id="11" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[12] +'.png'} id="12" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[13] +'.png'} id="13" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[14] +'.png'} id="14" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
                                         </Row>
                                         <Row>
-                                            <Image className="image" src={"images/"+this.state.near_places_bw[15] +'.png'} id="15" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[16] +'.png'} id="16" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[17] +'.png'} id="17" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[18] +'.png'} id="18" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
-                                            <Image className="places" src={"images/"+this.state.near_places_bw[19] +'.png'} id="19" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="image" src={"images/"+this.state.near_places[15] +'.png'} id="15" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[16] +'.png'} id="16" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[17] +'.png'} id="17" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[18] +'.png'} id="18" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
+                                            <Image className="places" src={"images/"+this.state.near_places[19] +'.png'} id="19" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
                                         </Row>
 
                                     </Container>
@@ -424,7 +424,7 @@ class ResultPage extends React.Component {
 
                         </Container>
                     </Col>
-                    <Col xs='2' className="side_col_r"></Col>
+                    <Col xs='0' sm='0' md='2' className="side_col_r"></Col>
                 </Row>
 
 

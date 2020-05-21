@@ -115,8 +115,8 @@ class MainPage extends React.Component {
     render() {
         return (
             <Row>
-                <Col xs='3' className="side_col_l"></Col>
-                <Col xs='6'>
+                <Col xs='0' sm='0' md='3' className="side_col_l"></Col>
+                <Col xs='12' sm='12' md='6'>
                     <Container>
                         <Alert color="danger" isOpen={this.state.errorAlert} toggle={this.onDismiss}>
                             Select a language
@@ -171,7 +171,7 @@ class MainPage extends React.Component {
                     </Container>
 
                 </Col>
-                <Col xs='3' className="side_col_r"></Col>
+                <Col xs='0' sm='0' md='3' className="side_col_r"></Col>
             </Row>
 
 
