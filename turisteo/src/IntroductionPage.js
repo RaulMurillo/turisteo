@@ -45,7 +45,7 @@ class Prueba extends React.Component {
                                 Turisteo is a proyect for the subject "Tecnologías Multimedia e Interacción" (TMI) from Master in Computer Engineering at Complutense University of Madrid, course 2019-2020.
 					</p>
                             <p className="introduction_text" style={{ textAlign: "center" }}>
-                                It consists of an App capable of recognizing artistic and cultural monuments and generating information of tourist interest in this regard.
+                                This application is able to recognize artistic and cultural monuments in a photograph and display tourist information about them, either in text or audio format.
 					</p>
                         </div>
                         <Row>
