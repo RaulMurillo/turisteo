@@ -13,7 +13,7 @@
 
 }
 .scroll_text{
-    height: 500px;
+    height: 350px;
     overflow-y: scroll;
     margin-bottom: 30px;
 }
@@ -47,6 +47,17 @@
 }
 .row_language{
     margin-top: 10px;
+}
+
+.submitbtn{
+    margin-bottom: 200px;
+}
+.container {
+    height: '200px';
+    width:'94%';
+    margin-left:'0';
+    padding-left: '0';
+    border-left: 0;
 }
 @font-face {
     font-family: myFirstFont;

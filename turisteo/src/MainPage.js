@@ -163,7 +163,7 @@ class MainPage extends React.Component {
                             </Col>
 
                         </Row>
-                        <Row>
+                        <Row className="submitbtn">
 
                             <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" block onClick={this.handleButton}>Submit</Button>
                         

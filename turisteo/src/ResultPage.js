@@ -32,7 +32,8 @@ class ResultPage extends React.Component {
             near_places: ["metro_bw", "estacionTren_bw", "aeropuerto_bw", "bus_bw", "tranvia_bw",
                             "cafeteria_bw", "parque_bw", "restaurante_bw", "centroComercial_bw", "farmacia_bw",
                             "gasolinera_bw", "museo_bw", "parking_bw", "iglesia_bw", "hospital_bw",
-                            "cajero_bw", "policia_bw", "supermercado_bw", "zoo_bw", "atraccionTuristica_bw"]
+                            "cajero_bw", "policia_bw", "supermercado_bw", "zoo_bw", "atraccionTuristica_bw"],
+            img_height: 0
 
         }
         if (typeof this.props.location.state !== 'undefined') {
@@ -54,6 +55,7 @@ class ResultPage extends React.Component {
         this.longitud = localStorage.getItem('longitud')
         this.audio_check = localStorage.getItem('audio_check')
 
+        this.calcHeight = this.calcHeight.bind(this);
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.handlePlaces = this.handlePlaces.bind(this);
         this.crearMarcador = this.crearMarcador.bind(this)
@@ -67,7 +69,13 @@ class ResultPage extends React.Component {
 
     }
 
-
+    calcHeight(e) {
+        let height = e.target;
+        console.log(height);
+        /*this.setState({
+            img_height: node.offsetHeight
+            });*/
+    }
 
     componentDidMount() {
         if (typeof this.props.location.state !== 'undefined') {
@@ -308,15 +316,23 @@ class ResultPage extends React.Component {
                 <Row>
                     <Col xs='0' sm='0' md='2' className="side_col_l"></Col>
                     <Col xs='12' sm='12' md='8'>
-                        <Container>
-                            <h1><font size='50'>{this.title}</font></h1>
-                            <Row>
-                                <Col>
-                                    <Row>
-                                        <Image className="image" src={require('./instance/images/' + this.image_rect)} style={{ width: '100%', height: 350 }} rounded />
-                                    </Row>
-                                    <Row>
-                                        <Map style={{ height: '85vh', width: '100%' }}
+                    <h1><font size='50'>{this.title}</font></h1>
+                        <Row>
+                            <Col md='6' xs='12' sm='12'>
+                            <Image className="image" /*ref={(e) => this.calcHeight(e)}*/ src={require('./instance/images/' + this.image_rect)} style={{ width: '100%', height: 350 }} rounded />
+                            </Col>
+                            <Col md='6' xs='12' sm='12'>
+                            <Container className="scroll_text">
+                                        <p className="introduction_text">{this.text}</p>
+                            </Container>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md='6' xs='12' sm='12'>
+                                <Container className="container" style={{height: '500px', width:'94%', marginLeft:'0', paddingLeft: '0'}}>
+
+                                
+                                <Map style={{height: '500px', width:'94%'}}
                                             google={this.props.google}
                                             zoom={15}
                                             onReady={this.fetchPlaces}
@@ -325,14 +341,13 @@ class ResultPage extends React.Component {
                                             <Marker position={{ lat: this.latitud, lng: this.longitud }} icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"} />
 
                                         </Map>
-
-                                    </Row>
-                                </Col>
-                                <Col>
-                                    <Container className="scroll_text">
-                                        <p className="introduction_text">{this.text}</p>
-                                    </Container>
-                                    <h4 className="places">{this.state.near_place}</h4>
+                                
+                                        </Container>
+                            </Col>
+                            
+                            <Col md='6' xs='12' sm='12'>
+                            <Container>
+                            <h4 className="places">{this.state.near_place}</h4>
                                     <Container className="places">
                                         <Row >
                                             <Image className="image" src={"images/"+this.state.near_places[0] +'.png'} id="0" onClick={(e) => this.handlePlaces(e)} style={{ width: 40, height: 40 }} rounded />
@@ -365,9 +380,13 @@ class ResultPage extends React.Component {
 
                                     </Container>
                                     {this.audio}
-                                </Col>
-                            </Row>
-                        </Container>
+                                    </Container>
+                            </Col>
+                            
+                        </Row>
+                        
+
+                    
                     </Col>
                     <Col xs='0' sm='0' md='2' className="side_col_r"></Col>
                 </Row>
