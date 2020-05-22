@@ -141,11 +141,7 @@ class MainPage extends React.Component {
                                 maxFileSize={20971520}
                             />
                         </Row>
-                        <Row>
-
-                            <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" block onClick={this.handleButton}>Submit</Button>
                         
-                        </Row>
 
                         <Row className="row_language">
 
@@ -166,6 +162,11 @@ class MainPage extends React.Component {
                                 </Form.Group>
                             </Col>
 
+                        </Row>
+                        <Row>
+
+                            <Button disabled={this.state.image_rect === undefined && this.state.butonAct === false} variant="primary" block onClick={this.handleButton}>Submit</Button>
+                        
                         </Row>
 
 

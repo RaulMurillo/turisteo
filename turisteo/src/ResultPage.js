@@ -8,34 +8,12 @@ import {
 } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import ReactAudioPlayer from 'react-audio-player';
-//import fs from 'fs'
 
 
 
 class ResultPage extends React.Component {
     constructor(props) {
         super(props);
-        // let obj = {
-        //     filename: this.props.location.state.data.picture[0].name,
-        //     language: this.props.location.state.data.selectedOption,
-        //     image_rect: this.props.location.state.data.image_rect,
-        //     title: this.props.location.state.data.title,
-        //     landmark: this.props.location.state.data.landmark,
-        //     latitud: this.props.location.state.data.latitud,
-        //     longitud: this.props.location.state.data.longitud
-        // };
-
-        // let fs = require('fs'),
-        //     jsonData = JSON.stringify(obj);
-
-        // fs.writeFile("./props.json", jsonData, err => {
-        //     if (err) {
-        //         console.log('Error writing file', err)
-        //     } else {
-        //         console.log('Successfully wrote file')
-        //     }
-        // })
-
 
         this.state = {
             text: undefined,
@@ -75,10 +53,6 @@ class ResultPage extends React.Component {
         this.latitud = localStorage.getItem('latitud')
         this.longitud = localStorage.getItem('longitud')
         this.audio_check = localStorage.getItem('audio_check')
-        //this.text = localStorage.getItem('text')
-
-
-
 
         this.fetchPlaces = this.fetchPlaces.bind(this);
         this.handlePlaces = this.handlePlaces.bind(this);
@@ -96,7 +70,6 @@ class ResultPage extends React.Component {
 
 
     componentDidMount() {
-        //fetch('pruebaCeca.html').then(data => data.text()).then(html=> document.getElementById('elementID').innerHTML = html);
         if (typeof this.props.location.state !== 'undefined') {
             if (this.landmark !== undefined) {
                 fetch('/title/' + 'Nearby places' + '/' + this.language).then(res => res.json()).then(data => {
@@ -116,11 +89,7 @@ class ResultPage extends React.Component {
                 fetch('/text/' + this.landmark + '/' + this.language).then(res => res.json()).then(data => {
                     this.setState({ text: data.text });
                     localStorage.setItem('text', data.text);
-                    console.log(localStorage.getItem('text'));
-                    // this.text = this.state.text
-                    console.log(this.audio_check)
                     if (this.audio_check === 'true') {
-                        console.log(this.audio_check)
                         fetch('/speech/' + this.state.text + '/' + this.language).then(res => res.json()).then(data => {
                             localStorage.setItem('audio', data.audio);
                             this.setState({ audio: data.audio });
@@ -170,7 +139,6 @@ class ResultPage extends React.Component {
                 //openNow: true, //si los queremos abiertos ahora
                 type: this.state.places[i]
             };
-            console.log(this.state.places)
             service.nearbySearch(request, (results, status) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
 
@@ -186,7 +154,7 @@ class ResultPage extends React.Component {
         this.setState({ mapProps: mapProps, map: map });
 
     }
-    crearMarcador(place, mapProps, map, latLng) { //var image =dir 
+    crearMarcador(place, mapProps, map, latLng) {
         // Creamos un marcador
 
         const { google } = mapProps;
@@ -278,14 +246,6 @@ class ResultPage extends React.Component {
 
     }
 
-    handleCheckboxChange = selectedOption => {
-
-        let pl = this.state.places;
-        pl.push(this.places[0]);
-        this.setState({ places: pl })
-        console.log(this.state.places)
-
-    }
     removeItemFromArr(arr, item) {
         var i = arr.indexOf(item);
 
@@ -314,7 +274,6 @@ class ResultPage extends React.Component {
         }
         this.fetchPlaces(this.state.mapProps, this.state.map)
         this.setState({ places: pl, near_places: near_places})
-        console.log(this.state.places)
     }
 
     render() {
@@ -326,7 +285,6 @@ class ResultPage extends React.Component {
         };
         if (this.image_rect !== 'undefined') {
             if (this.state.audio !== undefined && this.state.audio !== null) {
-                console.log("hola")
                 this.audio = <ReactAudioPlayer
                     src={require('./instance/audios/' + this.state.audio)}
                     autoPlay
@@ -346,8 +304,6 @@ class ResultPage extends React.Component {
 
             }
 
-
-
             return (
                 <Row>
                     <Col xs='0' sm='0' md='2' className="side_col_l"></Col>
@@ -359,9 +315,6 @@ class ResultPage extends React.Component {
                                     <Row>
                                         <Image className="image" src={require('./instance/images/' + this.image_rect)} style={{ width: '100%', height: 350 }} rounded />
                                     </Row>
-
-
-
                                     <Row>
                                         <Map style={{ height: '85vh', width: '100%' }}
                                             google={this.props.google}
@@ -374,17 +327,11 @@ class ResultPage extends React.Component {
                                         </Map>
 
                                     </Row>
-
-
-
-
                                 </Col>
                                 <Col>
                                     <Container className="scroll_text">
                                         <p className="introduction_text">{this.text}</p>
                                     </Container>
-
-
                                     <h4 className="places">{this.state.near_place}</h4>
                                     <Container className="places">
                                         <Row >
@@ -420,8 +367,6 @@ class ResultPage extends React.Component {
                                     {this.audio}
                                 </Col>
                             </Row>
-
-
                         </Container>
                     </Col>
                     <Col xs='0' sm='0' md='2' className="side_col_r"></Col>
