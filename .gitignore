@@ -8,8 +8,34 @@ __pycache__/
 # Visual code files
 .vscode/
 
+# dependencies
+node_modules
+/.pnp
+.pnp.js
+
 # C extensions
 *.so
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.google-cookie
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+dist
+trash
 
 # Distribution / packaging
 .Python
@@ -69,6 +95,7 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+.flaskenv
 
 # Scrapy stuff:
 .scrapy
