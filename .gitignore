@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+
+# Visual code files
+.vscode/
 
 # dependencies
 node_modules
@@ -131,6 +136,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.flaskenv
 env/
 venv/
 ENV/
@@ -157,5 +163,3 @@ dmypy.json
 
 # Credentials
 *credentials.*
-
-# *config.*
