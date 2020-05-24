@@ -22,11 +22,11 @@ https://cloud.google.com/vision/docs.
 import argparse
 import json
 from google.protobuf.json_format import MessageToJson
-import logging
 from google.cloud import vision
-from app.errors import ImageDetectionError
+# from app.errors import ImageDetectionError
 import io
-#from errors import ImageDetectionError
+import logging
+
 
 # gcp_client = None
 
@@ -60,28 +60,17 @@ def detect_landmarks(path):
     if len(landmarks) == 0:
         logging.warning('No landmark detected on picture.')
         # return None
-        raise ImageDetectionError
+        raise AttributeError('No landmark detected on picture.')
 
     # logging.debug('Landmarks:')
     # for landmark in landmarks:
     #     logging.debug(landmark)
-    
-    #     # print(landmark.description)
-
-    #     for location in landmark.locations:
-    #         lat_lng = location.lat_lng
-    #         latitud = lat_lng.latitude
-    #         longitud = lat_lng.longitude
-          
-        
-
 
         # print(landmark.description)
         # for location in landmark.locations:
         #     lat_lng = location.lat_lng
         #     print('Latitude {}'.format(lat_lng.latitude))
         #     print('Longitude {}'.format(lat_lng.longitude))
-
     
     
 
