@@ -28,7 +28,7 @@ Jinja2==2.11.1
 lxml==4.6.2
 MarkupSafe==1.1.1
 num2words==0.5.10
-Pillow==7.1.1
+Pillow>=8.1.1
 playsound==1.2.2
 protobuf==3.11.3
 pyasn1==0.4.8
